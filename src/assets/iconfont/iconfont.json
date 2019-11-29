@@ -1,0 +1,23 @@
+{
+  "id": "1527552",
+  "name": "myapp",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "11474271",
+      "name": "account",
+      "font_class": "account",
+      "unicode": "e6f8",
+      "unicode_decimal": 59128
+    },
+    {
+      "icon_id": "11474332",
+      "name": "password",
+      "font_class": "password",
+      "unicode": "e6ff",
+      "unicode_decimal": 59135
+    }
+  ]
+}
