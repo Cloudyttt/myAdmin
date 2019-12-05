@@ -14,8 +14,12 @@ export const constantRoutes = [
   },
   {
     path: '/',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
     name: 'home',
-    component: Home
+    component: Home,
   },
   {
     path: '/404',
@@ -42,6 +46,7 @@ export function resetRouter() {
 
 // 设置路由跳转的NProgress
 router.beforeEach((to, from, next) => {
+  console.log('beforeEach');
   NProgress.start()
   next()
 })

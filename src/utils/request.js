@@ -46,9 +46,10 @@ service.interceptors.response.use(
   // 下面为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页如通过xmlhttprequest 状态码标识 逻辑可写在下面error中
   response => {
     const res = response.data
-
+    console.log('response.data in request:', res);
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 20000) {
+      console.log('res.code !== 20000');
       Message({
         message: res.message || 'Error',
         type: 'error',

@@ -17,7 +17,7 @@ export function parseTime(time, cFormat) {
   if (typeof time === 'object') {
     date = time
   } else {
-    if ((typeof time === 'string') && (/^[0-9]+$/.test(time))) {
+    if ((typeof time === 'string') && (/^[0-9]+$/.test(time))) { // 正则：以数字开头和结尾的字符串
       time = parseInt(time)
     }
     if ((typeof time === 'number') && (time.toString().length === 10)) {
@@ -89,6 +89,7 @@ export function formatTime(time, option) {
 /**
  * @param {string} url
  * @returns {Object}
+ * url解析为对象
  */
 export function param2Obj(url) {
   const search = url.split('?')[1]

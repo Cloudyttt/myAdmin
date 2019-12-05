@@ -13,8 +13,9 @@ export function isExternal(path) {
 /**
  * @param {string} str
  * @returns {Boolean}
+ * 登陆权限验证
  */
 export function validUsername(str) {
-  const valid_map = ['admin', 'editor']
+  const valid_map = ['admin', 'editor', 'normal']
   return valid_map.indexOf(str.trim()) >= 0
 }

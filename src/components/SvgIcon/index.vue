@@ -5,6 +5,7 @@
 </template>
 
 <script>
+  import '@/assets/iconfont/iconfont.js'
   export default {
     name: 'icon-svg',
     props: {
