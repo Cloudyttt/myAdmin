@@ -8,17 +8,18 @@ export function login(data) {
   })
 }
 
-export function getInfo(id, token) {
+export function getInfo(data) {
   return request({
     url: 'http://localhost:3000/users/getInfo',
-    method: 'get',
-    params: { id, token }
+    method: 'post',
+    data
   })
 }
 
-export function logout() {
+export function logout(data) {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: 'http://localhost:3000/users/logout',
+    method: 'post',
+    data
   })
 }

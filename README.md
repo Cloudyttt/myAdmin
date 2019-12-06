@@ -1,4 +1,8 @@
-# myapp
+# myAdmin
+
+English | [简体中文](./README-zh.md)
+
+> A magical vue admin with Element UI & axios & iconfont & permission control & lint
 
 ## Project setup
 ```

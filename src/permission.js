@@ -23,21 +23,21 @@ router.beforeEach(async(to, from, next) => {
   document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in
-  console.log('hasToken', hasToken)
   const hasToken = getToken()
-
+  console.log('是否已有令牌：', hasToken)
   if (hasToken) {
     if (to.path === '/login') { // 如果已经登陆，还想跳转到登陆界面则默认跳转到主页
       console.log('to.path === login')
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()
-    } else {
+    } else { // 如果已经登陆，且所要跳转的路由不是login
       const hasGetUserInfo = store.getters.name
-      console.log('hasGetUserInfo', hasGetUserInfo)
-      if (hasGetUserInfo) {
+      if (hasGetUserInfo) { // 则判断是否已经拉取了用户信息，已拉取则正常跳转到目的路由
+        console.log('已拉取用户信息')
         next()
-      } else {
+      } else { // 还没有获得用户信息则去拉取用户信息
+        console.log('尚未拉取用户信息')
         try {
           // get user info
           await store.dispatch('user/getInfo')
@@ -52,13 +52,13 @@ router.beforeEach(async(to, from, next) => {
         }
       }
     }
-  } else {
+  } else { // 无令牌，尚未登陆
     /* has no token*/
-
-    if (whiteList.indexOf(to.path) !== -1) {
+    console.log('无令牌，尚未登陆');
+    if (whiteList.indexOf(to.path) !== -1) { // 如果目的路由是在白名单中则允许直接跳转
       // in the free login whitelist, go directly
       next()
-    } else {
+    } else { // 否则一律跳转到登陆界面，并且将这个目的路由作为参数传给login，存储下来，以便下次成功登陆后立即跳转到这个目的路由
       // other pages that do not have permission to access are redirected to the login page.
       next(`/login?redirect=${to.path}`)
       NProgress.done()

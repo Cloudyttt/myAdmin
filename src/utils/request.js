@@ -1,7 +1,7 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import {MessageBox, Message} from 'element-ui'
 import store from '@/store'
-import { getToken } from '@/utils/auth'
+import {getToken} from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
@@ -35,7 +35,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -43,12 +43,13 @@ service.interceptors.response.use(
    * You can also judge the status by HTTP Status Code
    */
 
-  // 下面为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页如通过xmlhttprequest 状态码标识 逻辑可写在下面error中
+    // 下面为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页如通过xmlhttprequest 状态码标识 逻辑可写在下面error中
   response => {
+    // console.log(response);
     const res = response.data
     console.log('response.data in request:', res);
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 20000) {
+    if (res.code !== 200) {
       console.log('res.code !== 20000');
       Message({
         message: res.message || 'Error',
@@ -57,7 +58,7 @@ service.interceptors.response.use(
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 500 || res.code === 500 || res.code === 500) {
         // to re-login
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
           confirmButtonText: 'Re-Login',
