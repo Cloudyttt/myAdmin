@@ -2,37 +2,46 @@
 
 简体中文 | [English](./README-zh.md)
 
-## Project setup
+> 一个简约大方的基于Vue全家桶 + Element + Axios + Express + MySQL实现后台管理系统。
+
+## 客户端项目启动
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+## 服务端项目启动
+```
+cd server
+npm install
+npm start
+```
+
+### 开发者模式下编译和热加载
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 为生产而编译和缩小
 ```
 npm run build
 ```
 
-### Run your tests
+### 测试
 ```
 npm run test
 ```
 
-### Lints and fixes files
+### Lints和fixes文件
 ```
 npm run lint
 ```
 
-### Run your end-to-end tests
+### 运行e2e测试
 ```
 npm run test:e2e
 ```
 
-### Run your unit tests
+### 运行单元测试
 ```
 npm run test:unit
 ```

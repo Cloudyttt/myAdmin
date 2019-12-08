@@ -12,6 +12,7 @@
       <template slot="title">
         <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
       </template>
+      <!--递归遍历子路由-->
       <sidebar-item
         v-for="child in item.children"
         :key="child.path"

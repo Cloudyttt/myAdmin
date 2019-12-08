@@ -8,7 +8,12 @@ English | [简体中文](./README-zh.md)
 ```
 npm install
 ```
-
+## start server
+```
+cd server
+npm install
+npm start
+```
 ### Compiles and hot-reloads for development
 ```
 npm run serve

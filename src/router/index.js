@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Layout from '@/layout/index'
+
 Vue.use(VueRouter)
-import NProgress from 'nprogress'
+// import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -31,7 +32,7 @@ import 'nprogress/nprogress.css'
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: () => import('@/views/login/index'), // 路由懒加载
     hidden: true
   },
   {
@@ -41,21 +42,65 @@ export const constantRoutes = [
   },
   {
     path: '/',
-    redirect: '/Layout'
-  },
-  {
-    path: '/Layout',
     name: 'Layout',
     component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: 'dashboard',
+      name: 'Dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: {
+        title: 'Dashboard',
+        icon: 'dashboard',
+      }
+    }]
   },
-
+  {
+    path:'/project',
+    component:Layout,
+    redirect:'/project/table',
+    name:'project',
+    meta: {
+      title:'project',
+      icon:'example',
+    },
+    children:[
+      {
+        path:'table',
+        name:'Table',
+        component:()=>import('@/views/table/index'),
+        meta:{
+          title:'table',
+          icon: 'table',
+        }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: 'Tree', icon: 'tree' }
+      }
+    ]
+  },
+  {
+    path: '/form',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/form/index'),
+        meta: { title: 'Form', icon: 'form' }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {path: '*', redirect: '/404', hidden: true}
 ]
 
 const createRouter = () => new VueRouter({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 
@@ -67,7 +112,7 @@ export function resetRouter() {
   router.matcher = newRouter.matcher // reset router
 }
 
-// 设置路由跳转的NProgress
+/*// 设置路由跳转的NProgress
 router.beforeEach((to, from, next) => {
   console.log('beforeEach');
   NProgress.start()
@@ -76,6 +121,6 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
   NProgress.done()
-})
+})*/
 
 export default router

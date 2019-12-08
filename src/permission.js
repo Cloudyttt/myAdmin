@@ -24,7 +24,7 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  console.log('是否已有令牌：', hasToken)
+  // console.log('是否已有令牌：', hasToken)
   if (hasToken) {
     if (to.path === '/login') { // 如果已经登陆，还想跳转到登陆界面则默认跳转到主页
       console.log('to.path === login')

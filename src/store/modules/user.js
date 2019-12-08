@@ -23,12 +23,12 @@ const mutations = {
 const actions = {
   // user login
   login({commit}, userInfo) {
-    console.log('登陆-userInfo:', userInfo)
+    // console.log('登陆-userInfo:', userInfo)
     const {username, password} = userInfo
     return new Promise((resolve, reject) => {
       login({username: username.trim(), password: password}).then(response => {
-        const {code, token} = response
-        console.log('code, token, id:', code, token);
+        const {token} = response
+        // console.log('code, token, id:', code, token);
         commit('SET_TOKEN', token) // 修改store的token状态
         setToken(token) // 设置Cookie缓存
         resolve()
@@ -40,7 +40,7 @@ const actions = {
 
   // get user info
   getInfo({commit, state}) {
-    console.log('拉取用户信息-userInfo')
+    // console.log('拉取用户信息-userInfo')
     return new Promise((resolve, reject) => {
       getInfo({token: state.token}).then(response => {
         const {data} = response
