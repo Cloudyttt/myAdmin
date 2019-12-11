@@ -19,7 +19,7 @@ router.beforeEach(async(to, from, next) => {
   NProgress.start()
 
   // set page title
-  console.log(from, 'to.meta.title', to.meta.title);
+  // console.log(from, 'to.meta.title', to.meta.title);
   document.title = getPageTitle(to.meta.title)
 
   // determine whether the user has logged in
@@ -27,17 +27,17 @@ router.beforeEach(async(to, from, next) => {
   // console.log('是否已有令牌：', hasToken)
   if (hasToken) {
     if (to.path === '/login') { // 如果已经登陆，还想跳转到登陆界面则默认跳转到主页
-      console.log('to.path === login')
+      // console.log('to.path === login')
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()
     } else { // 如果已经登陆，且所要跳转的路由不是login
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) { // 则判断是否已经拉取了用户信息，已拉取则正常跳转到目的路由
-        console.log('已拉取用户信息')
+        // console.log('已拉取用户信息')
         next()
       } else { // 还没有获得用户信息则去拉取用户信息
-        console.log('尚未拉取用户信息')
+        // console.log('尚未拉取用户信息')
         try {
           // get user info
           await store.dispatch('user/getInfo')

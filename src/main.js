@@ -15,6 +15,7 @@ import '@/permission' // permission control
 import IconSvg from 'components/SvgIcon/index'
 //全局注册icon-svg
 Vue.component('svg-icon', IconSvg)*/
+
 import '@/icons' // icon
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)

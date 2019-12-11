@@ -44,7 +44,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo({token: state.token}).then(response => {
         const {data} = response
-        console.log('response in getInfo:', response);
+        // console.log('response in getInfo:', response);
         if (!data) {
           reject('Verification failed, please Login again.')
         }

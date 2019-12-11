@@ -15,6 +15,7 @@ let writeRouter = require('./routes/write');
 let readRouter = require('./routes/read');
 let readRouter_gov = require('./routes/read_gov');
 let usersRouter = require('./routes/users');
+let tableRouter = require('./routes/table');
 // 创建项目实例
 let app = express();
 app.use(bodyParser.urlencoded({extended:false}));
@@ -34,8 +35,6 @@ app.use(allowCrossDomain);
 * app.use([path], function): 用这个方法来使用中间件，因为express依赖于connect，有大量的中间件，可以通过app.use来使用；path参数可以不填，默认为'/'
 * app.get(name): 获取名为name的项的值。
 * */
-
-
 
 // view engine setup
 // 设置views文件夹为存放视图文件的目录，即存放模板文件的地方
@@ -62,6 +61,7 @@ app.use('/write', writeRouter);
 app.use('/read', readRouter);
 app.use('/read_gov', readRouter_gov);
 app.use('/users', usersRouter);
+app.use('/table', tableRouter);
 
 // 捕获404错误，并转发到错误处理器
 // catch 404 and forward to error handler

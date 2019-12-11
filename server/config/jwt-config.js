@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 // JWT配置
 let signOptions = {
   algorithm: 'HS256',
@@ -18,4 +20,16 @@ let payload = {
 // 密钥
 let secretKey = 'Cloudy'
 
-module.exports = {signOptions, verifyOptions, secretKey}
+let verify = token => {
+  return new Promise((resolve, reject) => {
+    jwt.verify(token, secretKey, verifyOptions, (err, decode)=>{
+      if(err){
+        reject()
+      } else {
+        resolve(decode)
+      }
+    })
+  })
+}
+
+module.exports = {signOptions, verifyOptions, secretKey, verify}

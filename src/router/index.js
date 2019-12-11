@@ -50,48 +50,45 @@ export const constantRoutes = [
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: {
-        title: 'Dashboard',
-        icon: 'dashboard',
+        title: '首页',
+        icon: 'all',
       }
     }]
   },
   {
-    path:'/project',
-    component:Layout,
-    redirect:'/project/table',
-    name:'project',
+    path: '/project',
+    component: Layout,
+    redirect: '/project/table',
+    name: 'project',
     meta: {
-      title:'project',
-      icon:'example',
+      title: '项目',
+      icon: 'integral',
     },
-    children:[
+    children: [
       {
-        path:'table',
-        name:'Table',
-        component:()=>import('@/views/table/index'),
-        meta:{
-          title:'table',
-          icon: 'table',
+        path: 'table',
+        name: 'Table',
+        component: () => import('@/views/table/index'),
+        meta: {
+          title: '项目列表',
+          icon: 'calculator',
         }
       },
       {
+        path: 'form',
+        name: 'Form',
+        component: () => import('@/views/form/index'),
+        meta: {
+          title: '创建项目',
+          icon: 'add'
+        }
+      },
+      /*{
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
+        meta: {title: '树', icon: 'tree'}
+      },*/
     ]
   },
   // 404 page must be placed at the end !!!
