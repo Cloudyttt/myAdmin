@@ -125,6 +125,20 @@
       "unicode_decimal": 59211
     },
     {
+      "icon_id": "11488029",
+      "name": "discount",
+      "font_class": "discount",
+      "unicode": "e74c",
+      "unicode_decimal": 59212
+    },
+    {
+      "icon_id": "11488032",
+      "name": "default-template",
+      "font_class": "default-template",
+      "unicode": "e74d",
+      "unicode_decimal": 59213
+    },
+    {
       "icon_id": "11488035",
       "name": "electronics",
       "font_class": "electronics",
@@ -139,11 +153,88 @@
       "unicode_decimal": 59216
     },
     {
+      "icon_id": "11488057",
+      "name": "image-text",
+      "font_class": "image-text",
+      "unicode": "e753",
+      "unicode_decimal": 59219
+    },
+    {
       "icon_id": "11488075",
       "name": "manage-order",
       "font_class": "manage-order",
       "unicode": "e759",
       "unicode_decimal": 59225
+    },
+    {
+      "icon_id": "11488078",
+      "name": "Money management",
+      "font_class": "Moneymanagement",
+      "unicode": "e75a",
+      "unicode_decimal": 59226
+    },
+    {
+      "icon_id": "11488095",
+      "name": "pic",
+      "font_class": "pic",
+      "unicode": "e75c",
+      "unicode_decimal": 59228
+    },
+    {
+      "icon_id": "11488154",
+      "name": "trading volume",
+      "font_class": "tradingvolume",
+      "unicode": "e76a",
+      "unicode_decimal": 59242
+    },
+    {
+      "icon_id": "11488168",
+      "name": "set",
+      "font_class": "set",
+      "unicode": "e76c",
+      "unicode_decimal": 59244
+    },
+    {
+      "icon_id": "11488170",
+      "name": "store",
+      "font_class": "store",
+      "unicode": "e76f",
+      "unicode_decimal": 59247
+    },
+    {
+      "icon_id": "11488195",
+      "name": "credit card",
+      "font_class": "creditcard",
+      "unicode": "e770",
+      "unicode_decimal": 59248
+    },
+    {
+      "icon_id": "11494511",
+      "name": "collection",
+      "font_class": "collection",
+      "unicode": "e79d",
+      "unicode_decimal": 59293
+    },
+    {
+      "icon_id": "11494522",
+      "name": "consumption",
+      "font_class": "consumption",
+      "unicode": "e79f",
+      "unicode_decimal": 59295
+    },
+    {
+      "icon_id": "11674090",
+      "name": "home",
+      "font_class": "home",
+      "unicode": "e7a7",
+      "unicode_decimal": 59303
+    },
+    {
+      "icon_id": "12011691",
+      "name": "arrow-down",
+      "font_class": "arrow-down",
+      "unicode": "e7b2",
+      "unicode_decimal": 59314
     }
   ]
 }

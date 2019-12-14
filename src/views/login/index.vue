@@ -32,12 +32,13 @@
             :type="passwordType"
             placeholder="Password"
             name="password"
+            show-password="true"
             tabindex="2"
             auto-complete="on"
             @keyup.enter.native="handleLogin"/>
-        <span class="show-pwd" @click="showPwd">
+        <!--<span class="show-pwd" @click="showPwd">
         <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"/>
-        </span>
+        </span>-->
       </el-form-item>
       
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;"
@@ -53,6 +54,7 @@
 </template>
 
 <script>
+  // eslint-disable-next-line no-unused-vars
   import {validUsername} from '@/utils/validate'
   // import svgicon from 'components/SvgIcon/index.vue'
   // import '@/icons/svg/eye.svg'
@@ -66,9 +68,10 @@
           callback()
         }
       }
+      
       const validatePassword = (rule, value, callback) => {
         if (value.length < 6) {
-          callback(new Error('The password can not be less than 6 digits'))
+          callback(new Error('密码不能少于6个字符！'))
         } else {
           callback()
         }
@@ -143,13 +146,15 @@
       color: $cursor;
     }
   }
-  
+  .el-form-item__content{
+    line-height: normal;
+  }
   /* reset element-ui css */
   .login-container {
     .el-input {
       display: inline-block;
       height: 47px;
-      width: 85%;
+      width: 90%;
       
       input {
         background: transparent;

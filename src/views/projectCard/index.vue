@@ -1,54 +1,47 @@
 <template>
   <div class="app-container">
-    <el-table
-        :key="tableKey"
-        v-loading="listLoading"
-        :data="queryData"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%;">
-      <el-table-column label="编号" prop="id" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.$index+1 }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="名称" min-width="150px">
-        <template slot-scope="{row}">
-          <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="负责人" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="进度" class-name="status-col" align="center">
-        <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="日期" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.date}}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="150px">
-        <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate($index)">
-            修改
-          </el-button>
-          <el-button size="mini" type="danger" @click="handleDelete($index)">
+    <div style="overflow: hidden;display: flex; flex-wrap: wrap;justify-content:space-around">
+      <el-card
+          v-for="(item, index) in queryData"
+          :key="item.id"
+          class="box-card"
+          style="width: 400px; height: 240px; margin: 10px;"
+          shadow="hover">
+        <div slot="header" class="clearfix" style="padding: 0!important;">
+          <span><strong>{{index + 1}}. {{item.title}}</strong></span>
+          <el-button size="mini" type="danger" @click="openWarning(index)" style="float: right; padding: 3px 5px; margin-left: 10px">
             删除
           </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
-                @pagination="fetchData"/>
+          <el-button type="primary" size="mini" @click="handleUpdate(index)" style="float: right; padding: 3px 5px; margin-left: 10px">
+            修改
+          </el-button>
+        </div>
+        <el-row :gutter="20" style="padding: 8px 0">
+          <el-col :span="6" style="border-right: 1px solid lightgray; vertical-align: middle"><el-tag size="mini">项目名称</el-tag></el-col>
+          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.title}}</el-col>
+        </el-row>
+        <el-row :gutter="20" style="padding: 8px 0">
+          <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">负责人</el-tag></el-col>
+          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.author}}</el-col>
+        </el-row>
+        <el-row :gutter="20" style="padding: 8px 0">
+          <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">进度</el-tag></el-col>
+          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.status}}</el-col>
+        </el-row>
+        <el-row :gutter="20" style="padding: 8px 0">
+          <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">日期</el-tag></el-col>
+          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{parseTime(new Date(item.date))}}</el-col>
+        </el-row>
+      </el-card>
+    </div>
+  
+    <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.limit"
+        style=""
+        @pagination="fetchData"/>
     
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" center>
       <el-form ref="dataForm" :rules="rules" :model="form" label-position="left" label-width="70px"
@@ -61,14 +54,14 @@
         </el-form-item>
         <el-form-item label="进度">
           <el-select v-model="form.status" placeholder="选择项目当前状态">
-            <el-option label="未开始" value="未开始"/>
+            <el-option label="未完成" value="未完成"/>
             <el-option label="进行中" value="进行中"/>
             <el-option label="已完成" value="已完成"/>
           </el-select>
         </el-form-item>
         <el-form-item label="日期">
           <el-col :span="11">
-            <el-date-picker v-model="form.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择一个日期" style="width: 100%;"/>
+            <el-date-picker v-model="form.date" type="date" placeholder="选择一个日期" style="width: 100%;"/>
           </el-col>
         </el-form-item>
         <el-form-item label="即时交付">
@@ -82,7 +75,7 @@
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="updateData()">
+        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
           确认修改
         </el-button>
       </div>
@@ -95,49 +88,25 @@
   import {getList, updateProject, deleteProject} from '@/api/table'
   // eslint-disable-next-line no-unused-vars
   import {getToken} from '@/utils/auth' // get token from cookie
+  // eslint-disable-next-line no-unused-vars
   import waves from '@/directive/waves' // waves directive
   // eslint-disable-next-line no-unused-vars
   import {parseTime} from '@/utils/index'
+  // eslint-disable-next-line no-unused-vars
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-
-
-  const calendarTypeOptions = [
-    {key: 'CN', display_name: 'China'},
-    {key: 'US', display_name: 'USA'},
-    {key: 'JP', display_name: 'Japan'},
-    {key: 'EU', display_name: 'Eurozone'}
-  ]
-
-  // arr to obj, such as { CN : "China", US : "USA" }
-  const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name
-    return acc
-  }, {})
-
   export default {
-    name: 'ComplexTable',
+    name: "projectCard",
     components: {Pagination},
     directives: {waves},
     filters: {
       statusFilter(status) {
-        const statusMap = ['warning', 'primary', 'success']
-        let flag = 0;
-        switch (status) {
-          case '未开始':
-            flag = 0
-            break;
-          case '进行中':
-            flag = 1
-            break;
-          case '已完成':
-            flag = 2
-            break;
+        const statusMap = {
+          published: 'success',
+          draft: 'info',
+          deleted: 'danger'
         }
-        return statusMap[flag]
+        return statusMap[status]
       },
-      typeFilter(type) {
-        return calendarTypeKeyValue[type]
-      }
     },
     data() {
       return {
@@ -147,7 +116,7 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          limit: 20,
+          limit: 9,
         },
         form: {
           id: 0,
@@ -159,7 +128,7 @@
           author: 'Cloudy'
         },
         dialogFormVisible: false,
-        dialogStatus: 'update',
+        dialogStatus: '',
         textMap: {
           update: '修改',
           create: '创建'
@@ -184,11 +153,28 @@
       this.fetchData()
     },
     methods: {
+      openWarning(index) {
+        this.$confirm('此操作将永久删除该项目, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.handleDelete(index)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
       fetchData() {
         this.listLoading = true
         getList({token: this.token}).then(response => {
           this.list = response.data;
-          console.log('this.list[0].date=>', this.list[0].date);
           // console.log('this.list', this.list);
           this.total = this.list.length
           this.listLoading = false
@@ -221,40 +207,43 @@
         })
       },
       handleUpdate(index) {
-        this.temp = Object.assign({}, this.queryData[index]) // copy obj
+        console.log('row', this.list[index]);
+        this.temp = Object.assign({}, this.list[index]) // copy obj
+        console.log('this.temp', this.temp);
+
+
         this.form.title = this.temp.title
-        console.log('this.temp.date', this.temp.date);
-        this.form.date = this.temp.date
+        this.form.date = parseTime(new Date(this.temp.date))
         this.form.status = this.temp.status
         this.form.desc = this.temp.desc
         this.form.author = this.temp.author
         this.form.id = this.temp.id
-        // console.log('temp:', this.temp);
-        // console.log('this.form', this.form);
+
         this.editIndex = index;
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
-      },
-      updateData() {
-        this.dialogFormVisible = false
-        console.log('this.form.date--->', new Date(this.form.date));
-        updateProject({token: this.token, data: this.form}).then(response => {
-          console.log('response', response);
-          this.fetchData()
-        })
       },
       parseTime(date) {
         let year = date.getFullYear();
         let month = (date.getMonth() + 1).toString();
         let day = (date.getDate()).toString();
-        if (month.length == 1) {
+        if (month.length === 1) {
           month = "0" + month;
         }
-        if (day.length == 1) {
+        if (day.length === 1) {
           day = "0" + day;
         }
         let dateTime = year + "-" + month + "-" + day;
         return dateTime;
+      },
+      updateData() {
+        this.dialogFormVisible = false
+        this.form.date = this.parseTime(this.form.date);
+        console.log('this.form.date--->', this.form.date);
+        updateProject({token: this.token, data: this.form}).then(response => {
+          console.log('response', response);
+          this.fetchData()
+        })
       },
       handleDelete(index, row) {
         console.log(index, row);
@@ -262,7 +251,6 @@
         deleteProject({token: this.token, id: this.list[index].id}).then(response => {
           console.log('response', response);
           this.fetchData()
-          this.successMsg()
         })
       },
       successMsg() {
@@ -284,4 +272,13 @@
   .el-form-item__label {
     width: 100px !important;
   }
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
 </style>
+

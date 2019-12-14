@@ -23,3 +23,11 @@ export function logout(data) {
     data
   })
 }
+
+export function userQuery(data) {
+  return request({
+    url: 'http://localhost:3000/users/query',
+    method: 'post',
+    data
+  })
+}

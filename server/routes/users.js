@@ -8,29 +8,40 @@ const {signOptions, verifyOptions, secretKey} = require('../config/jwt-config');
 
 
 /* GET users listing. */
-router.get('/query', function (req, res, next) {
-  let sql = `select * from users`
-  let promise = query(sql);
-  promise.then(result => {
-    console.log(result);
-    let id = result[0].id
-    let token = 'admin-token' // 服务端生成token
-    let resData = {
-      code: 20000,
-      id,
-      token
+router.post('/query', function (req, res, next) {
+  let data = req.body;
+  let {token} = data;
+  console.log('token', token);
+  jwt.verify(token, secretKey, verifyOptions, (err, decode) => {
+    if (err) {
+      console.log('err', err);
+      let resData = {
+        code: 500 // 验证令牌失败
+      }
+      res.send(resData)
+    } else {
+      let sql = `select * from users`
+      let promise = query(sql);
+      promise.then(result => {
+        console.log(result);
+        let resData = {
+          code: 200,
+          data: result
+        }
+        res.send(resData)
+      }).catch(err => {
+        console.log(err)
+        let resData = {
+          code: 404,
+        }
+        res.send(resData)
+      });
     }
-    res.send(resData)
-  }).catch(err => {
-    console.log(err)
-    let resData = {
-      code: 50000,
-    }
-    res.send(resData)
+
   });
 });
 
-router.post('/login',async function (req, res, next) {
+router.post('/login', async function (req, res, next) {
   console.log('|----------------------------- login -----------------------------|');
   let data = req.body;
   console.log('data', data);
@@ -40,7 +51,7 @@ router.post('/login',async function (req, res, next) {
   let promise = query(sql);
   let resData = {}
   // 查询数据库
-   await promise.then(result => {
+  await promise.then(result => {
     // 查询数据库成功！
     if (result.length !== 0) {
       let id = result[0].id // 用户id
@@ -55,7 +66,7 @@ router.post('/login',async function (req, res, next) {
       }
       // 异步JWT生成令牌
       let trueToken = jwt.sign(payload, secretKey, signOptions, (err, token) => {
-        if(err){
+        if (err) {
           console.log('err', err);
           resData = {
             code: 500 // 生成令牌失败

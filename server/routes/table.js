@@ -18,6 +18,7 @@ router.post('/getList', function (req, res, next) {
     console.log('decode', decode);
     promise.then(result => {
       /*console.log(result);*/
+      console.log(result[0]);
       let resData = {
         code: 200,
         data: result
@@ -79,8 +80,9 @@ router.post('/updateProject', function (req, res, next) {
   let {token, data} = req.body
   console.log('token,data =>', token, data);
   let {id, title, status, date, desc, author} = data
-  console.log('date: ', date);
+
   date = date.split('T')[0]
+  console.log('date: ', date);
   let verifyPromise = verify(token);
   verifyPromise.then(decode => {
     console.log('decode', decode);

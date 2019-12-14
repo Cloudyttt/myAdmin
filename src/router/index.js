@@ -51,7 +51,22 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: {
         title: '首页',
-        icon: 'all',
+        icon: 'home',
+      }
+    }]
+  },
+  {
+    path: '/projectCard',
+    name: 'Layout',
+    component: Layout,
+    redirect: '/projectCard',
+    children: [{
+      path: 'projectCard',
+      name: 'ProjectCard',
+      component: () => import('@/views/projectCard/index'),
+      meta: {
+        title: '项目卡片',
+        icon: 'integral',
       }
     }]
   },
@@ -61,8 +76,8 @@ export const constantRoutes = [
     redirect: '/project/table',
     name: 'project',
     meta: {
-      title: '项目',
-      icon: 'integral',
+      title: '项目管理',
+      icon: 'all',
     },
     children: [
       {
@@ -83,13 +98,37 @@ export const constantRoutes = [
           icon: 'add'
         }
       },
-      /*{
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: {title: '树', icon: 'tree'}
-      },*/
     ]
+  },
+  {
+    path: '/buildingConfig',
+    name: 'Layout',
+    component: Layout,
+    redirect: '/buildingConfig',
+    children: [{
+      path: 'buildingConfig',
+      name: 'BuildingConfig',
+      component: () => import('@/views/buildingConfig/index'),
+      meta: {
+        title: '建筑配置',
+        icon: 'Moneymanagement',
+      }
+    }]
+  },
+  {
+    path: '/adminr',
+    name: 'Layout',
+    component: Layout,
+    redirect: '/adminer',
+    children: [{
+      path: 'adminer',
+      name: 'Ddminer',
+      component: () => import('@/views/adminer/index'),
+      meta: {
+        title: '管理员',
+        icon: 'certified-supplier',
+      }
+    }]
   },
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}
