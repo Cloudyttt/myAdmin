@@ -111,6 +111,20 @@
       "unicode_decimal": 59209
     },
     {
+      "icon_id": "11488000",
+      "name": "category",
+      "font_class": "category",
+      "unicode": "e74f",
+      "unicode_decimal": 59215
+    },
+    {
+      "icon_id": "11488001",
+      "name": "close",
+      "font_class": "close",
+      "unicode": "e751",
+      "unicode_decimal": 59217
+    },
+    {
       "icon_id": "11488002",
       "name": "certified-supplier",
       "font_class": "certified-supplier",
@@ -153,11 +167,25 @@
       "unicode_decimal": 59216
     },
     {
+      "icon_id": "11488047",
+      "name": "history",
+      "font_class": "history",
+      "unicode": "e752",
+      "unicode_decimal": 59218
+    },
+    {
       "icon_id": "11488057",
       "name": "image-text",
       "font_class": "image-text",
       "unicode": "e753",
       "unicode_decimal": 59219
+    },
+    {
+      "icon_id": "11488069",
+      "name": "loading",
+      "font_class": "loading",
+      "unicode": "e756",
+      "unicode_decimal": 59222
     },
     {
       "icon_id": "11488075",

@@ -8,6 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Cookies from 'js-cookie'
+import echarts from 'echarts'
 import 'normalize.css'
 import '@/styles/index.scss' // global css
 import '@/permission' // permission control
@@ -20,6 +21,7 @@ import '@/icons' // icon
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
 Vue.prototype.$cookie = Cookies;
+Vue.prototype.$echarts = echarts;
 Vue.use(ElementUI);
 new Vue({
   router,

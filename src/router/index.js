@@ -44,16 +44,46 @@ export const constantRoutes = [
     path: '/',
     name: 'Layout',
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
+    redirect: '/homepage',
+    meta: {
+      title: '首页',
+      icon: 'home',
+    },
+    children: [
+      {
+        path: '/homepage',
+        name: 'homepage',
+        component: () => import('components/HomePage/index'),
+        /*children: [
+          {
+            path: '/developers',
+            name: 'developers',
+            component: () => import('components/Developers/index'),
+            hidden: true
+          },
+          {
+            path: '/government',
+            name: 'government',
+            component: () => import('components/Government/index'),
+            hidden: true
+          }
+        ],*/
+        meta: {
+          title: 'PWC',
+          icon: 'home',
+        },
+      }
+      /*{
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: {
         title: '首页',
         icon: 'home',
-      }
-    }]
+      },
+      children: []
+    }*/
+    ]
   },
   {
     path: '/projectCard',
@@ -116,7 +146,7 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/adminr',
+    path: '/adminer',
     name: 'Layout',
     component: Layout,
     redirect: '/adminer',
