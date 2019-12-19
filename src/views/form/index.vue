@@ -7,17 +7,17 @@
         <el-form-item label="项目负责人">
           <el-input v-model="author" disabled/>
         </el-form-item>
-        <el-form-item label="数据来源">
+        <!--<el-form-item label="数据来源">
           <el-input v-model="form.xlsAddr"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="MapBox ID">
           <el-input v-model="form.mapboxId"/>
         </el-form-item>
-        <el-form-item label="XLS JSON">
-          <el-button type="success" plain @click="$router.push({name:'BuildingConfig'})">详细建筑配置</el-button>
-        </el-form-item>
         <el-form-item label="Mesh JSON">
           <el-input type="textarea" v-model="form.meshJson"/>
+        </el-form-item>
+        <el-form-item label="XLS JSON">
+          <el-button type="success" plain @click="routerToBuildingConfig">详细建筑配置</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">创建</el-button>
@@ -53,17 +53,36 @@
       }
     },
     methods: {
+      routerToBuildingConfig() {
+        this.$refs.form.validate(valid => {
+          if (valid) {
+            let temp = Object.assign({}, this.form);
+            this.$router.push({name: 'BuildingConfig', params: {data: temp, from:'Form'}})
+          } else {
+            this.failMsg('请先正确填写表单其他部分！')
+            return false
+          }
+        });
+      },
       onSubmit() {
-        let token = getToken();
-        this.listLoading = true
-        createProject({token, project: this.form}).then(response => {
-          this.list = response.data;
-          console.log('this.list', this.list);
-          this.listLoading = false
-          this.successMsg()
-        }).catch(err => {
-          this.failMsg(err)
-        })
+        this.$refs.form.validate(valid => {
+          if (valid) {
+            let token = getToken();
+            this.listLoading = true
+            createProject({token, project: this.form}).then(response => {
+              this.list = response.data;
+              console.log('this.list', this.list);
+              this.listLoading = false
+              this.successMsg()
+              this.$router.push('/')
+            }).catch(err => {
+              this.failMsg(err)
+            })
+          } else {
+            this.failMsg('请先正确填写表单！')
+            return false
+          }
+        });
       },
       onCancel() {
         this.form = {

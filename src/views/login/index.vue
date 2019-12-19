@@ -60,6 +60,7 @@
   export default {
     name: 'Login',
     data() {
+      // eslint-disable-next-line no-unused-vars
       const validateUsername = (rule, value, callback) => {
         if (!validUsername(value)) {
           callback(new Error('Please enter the correct user name'))
@@ -81,7 +82,7 @@
           password: '123456'
         },
         loginRules: {
-          username: [{required: true, trigger: 'blur', validator: validateUsername}],
+          username: [{required: true, trigger: 'blur'}], // , validator: validateUsername
           password: [{required: true, trigger: 'blur', validator: validatePassword}]
         },
         loading: false,

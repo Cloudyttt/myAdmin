@@ -9,35 +9,45 @@
           shadow="hover">
         <div slot="header" class="clearfix" style="padding: 0!important;">
           <span><strong>{{index + 1}}. {{item.title}}</strong></span>
-          <el-button size="mini" type="danger" @click="openWarning(index)" style="float: right; padding: 3px 5px; margin-left: 10px">
+          <el-button size="mini" type="danger" @click="openWarning(index)"
+                     style="float: right; padding: 3px 5px; margin-left: 10px">
             删除
           </el-button>
-          <el-button type="primary" size="mini" @click="handleUpdate(index)" style="float: right; padding: 3px 5px; margin-left: 10px">
+          <el-button type="primary" size="mini" @click="handleUpdate(index)"
+                     style="float: right; padding: 3px 5px; margin-left: 10px">
             修改
           </el-button>
         </div>
         <div class="card-main" @click="showPWC(index)">
           <el-row :gutter="20" style="padding: 8px 0">
-            <el-col :span="6" style="border-right: 1px solid lightgray; vertical-align: middle"><el-tag size="mini">项目名称</el-tag></el-col>
+            <el-col :span="6" style="border-right: 1px solid lightgray; vertical-align: middle">
+              <el-tag size="mini">项目名称</el-tag>
+            </el-col>
             <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.title}}</el-col>
           </el-row>
           <el-row :gutter="20" style="padding: 8px 0">
-            <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">负责人</el-tag></el-col>
+            <el-col :span="6" style="border-right: 1px solid lightgray">
+              <el-tag size="mini">负责人</el-tag>
+            </el-col>
             <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{author}}</el-col>
           </el-row>
           <el-row :gutter="20" style="padding: 8px 0">
-            <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">数据来源</el-tag></el-col>
+            <el-col :span="6" style="border-right: 1px solid lightgray">
+              <el-tag size="mini">数据来源</el-tag>
+            </el-col>
             <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.xlsAddr}}</el-col>
           </el-row>
           <el-row :gutter="20" style="padding: 8px 0">
-            <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">Mapbox ID</el-tag></el-col>
+            <el-col :span="6" style="border-right: 1px solid lightgray">
+              <el-tag size="mini">Mapbox ID</el-tag>
+            </el-col>
             <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.mapboxId}}</el-col>
           </el-row>
         </div>
-        
+      
       </el-card>
     </div>
-  
+    
     <pagination
         v-show="total>0"
         :total="total"
@@ -45,7 +55,7 @@
         :limit.sync="listQuery.limit"
         style=""
         @pagination="fetchData"/>
-  
+    
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" center>
       <el-form ref="dataForm" :rules="rules" :model="form" label-position="left" label-width="100px"
                style="padding: 0 50px">
@@ -58,8 +68,11 @@
         <el-form-item label="Mapbox ID">
           <el-input v-model="form.mapboxId"/>
         </el-form-item>
-        <el-form-item label="数据来源">
+        <!--<el-form-item label="数据来源">
           <el-input v-model="form.xlsAddr"/>
+        </el-form-item>-->
+        <el-form-item label="Excel JSON">
+          <el-button type="success" plain @click="routerToBuildingConfig">详细建筑配置修改</el-button>
         </el-form-item>
         <!--<el-form-item label="Excel JSON">
           <el-input type="textarea" v-model="form.xlsJson"/>
@@ -101,7 +114,7 @@
     },
     data() {
       return {
-        author:'',
+        author: '',
         tableKey: 0,
         list: [],
         total: 1,
@@ -114,8 +127,8 @@
           id: 0,
           title: '',
           xlsAddr: '',
-          meshJson:'',
-          ExcelJson:''
+          meshJson: '',
+          ExcelJson: ''
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -143,8 +156,20 @@
       this.fetchData()
     },
     methods: {
-      showPWC(index){
-        this.$router.push({name:'Homepage', params:this.list[index]})
+      routerToBuildingConfig() {
+        this.$refs.dataForm.validate(valid => {
+          if (valid) {
+            let temp = Object.assign({}, this.form);
+            this.$router.push({name: 'BuildingConfig', params: {data: temp, from: 'ProjectCard'}})
+          } else {
+            this.failMsg('请先正确填写表单其他部分！')
+            return false
+          }
+        });
+
+      },
+      showPWC(index) {
+        this.$router.push({name: 'Homepage', params: this.list[index]})
       },
       openWarning(index) {
         this.$confirm('此操作将永久删除该项目, 是否继续?', '提示', {
@@ -225,13 +250,22 @@
         return dateTime;
       },
       updateData() {
-        this.dialogFormVisible = false
-        this.form.date = this.parseTime(this.form.date);
-        console.log('this.form.date--->', this.form.date);
-        updateProject({token: this.token, data: this.form}).then(response => {
-          console.log('response', response);
-          this.fetchData()
-        })
+
+        this.$refs.dataForm.validate(valid => {
+          if (valid) {
+            this.dialogFormVisible = false
+            this.form.date = this.parseTime(this.form.date);
+            console.log('this.form.date--->', this.form.date);
+            updateProject({token: this.token, data: this.form}).then(response => {
+              console.log('response', response);
+              this.fetchData()
+            })
+          } else {
+            this.failMsg('请先正确填写表单！')
+            return false
+          }
+        });
+        
       },
       handleDelete(index, row) {
         console.log(index, row);
@@ -260,15 +294,18 @@
   .el-form-item__label {
     width: 100px !important;
   }
+  
   .clearfix:before,
   .clearfix:after {
     display: table;
     content: "";
   }
+  
   .clearfix:after {
     clear: both
   }
-  .card-main{
+  
+  .card-main {
     cursor: pointer;
   }
 </style>

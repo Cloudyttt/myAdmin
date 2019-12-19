@@ -75,7 +75,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <el-button type="primary" plain style="float: right; margin: 40px 20px 0 0" @click="$router.push({name:'Form'})">返回</el-button>
+    <el-button plain style="float: right; margin: 40px 20px 0 0" @click="routerBack">返回</el-button>
     <el-button type="primary" style="float: right; margin: 40px 20px 0 0" @click="saveBuildingConfig">保存</el-button>
   </div>
 </template>
@@ -88,7 +88,7 @@
         // let patt = /^\d+(\.\d+)?$/
         // let patt = /(^\d+(\.\d+)?$)|(^[1-9]+\d*$)/
         let patt = /(^[1-9]+\.\d+$)|(^[1-9]+\d*$)|(^0\.\d+$)|(^0$)/
-        if(value==='/'){
+        if (value === '/') {
           callback()
         } else if (value === '') {
           callback(new Error('输入不能为空！'));
@@ -101,18 +101,21 @@
         }
       };
       return {
+        form: {},
         a: '1',
         dialogFormVisible: false,
+        backTo: 'Layout',
+        xlsData: {},
         rules: {
-          rentUnitPrice: [{validator: checkInput, trigger: ['blur','change']}],
-          sellUnitPrice:[{validator: checkInput, trigger: ['blur','change']}],
-          landCost:[{validator: checkInput, trigger: ['blur','change']}],
-          developmentCost:[{validator: checkInput, trigger: ['blur','change']}],
-          employmentPopulation:[{validator: checkInput, trigger: ['blur','change']}],
-          residentPopulation:[{validator: checkInput, trigger: ['blur','change']}],
-          energyConsumption:[{validator: checkInput, trigger: ['blur','change']}],
-          taxRevenue:[{validator: checkInput, trigger: ['blur','change']}],
-          gdp:[{validator: checkInput, trigger: ['blur','change']}],
+          rentUnitPrice: [{validator: checkInput, trigger: ['blur', 'change']}],
+          sellUnitPrice: [{validator: checkInput, trigger: ['blur', 'change']}],
+          landCost: [{validator: checkInput, trigger: ['blur', 'change']}],
+          developmentCost: [{validator: checkInput, trigger: ['blur', 'change']}],
+          employmentPopulation: [{validator: checkInput, trigger: ['blur', 'change']}],
+          residentPopulation: [{validator: checkInput, trigger: ['blur', 'change']}],
+          energyConsumption: [{validator: checkInput, trigger: ['blur', 'change']}],
+          taxRevenue: [{validator: checkInput, trigger: ['blur', 'change']}],
+          gdp: [{validator: checkInput, trigger: ['blur', 'change']}],
         },
         configForm: {
           grade1: '零售商业',
@@ -337,21 +340,56 @@
             gdp: 0.00,
           },
         ],
+        editingIndex: 0,
       }
     },
     methods: {
-      saveBuildingConfig(){
-      
+      routerBack() {
+        this.$router.push({name: this.backTo})
+      },
+      saveBuildingConfig() {
+        // TODO:向服务器发送创建/修改请求
+        alert('保存')
       },
       editBuildingConfig(index) {
         console.log(index);
         this.dialogFormVisible = true
         Object.assign(this.configForm, this.configData[index]) // 浅拷贝
       },
-      confirmEdition(index) {
-        console.log(index);
-        this.dialogFormVisible = false
+      confirmEdition() {
+        this.$refs.dataForm.validate(valid => {
+          if (valid) {
+            this.dialogFormVisible = false
+          } else {
+            this.failMsg('请先正确填写表单！')
+            return false
+          }
+        });
       },
+      successMsg() {
+        this.$message({
+          message: '成功!',
+          type: 'success'
+        });
+      },
+      failMsg(err) {
+        this.$message({
+          message: err,
+          type: 'warning'
+        })
+      },
+    },
+    created() {
+      console.log('this.$route.params', this.$route.params);
+      if (this.$route.params.data) {
+        this.form = this.$route.params.data
+      }
+
+      if (this.$route.params.from) {
+        this.backTo = this.$route.params.from;
+      }
+
+      console.log('this.backTo', this.backTo);
     },
   }
 </script>

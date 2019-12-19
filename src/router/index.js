@@ -103,6 +103,7 @@ export const constantRoutes = [
         path: 'buildingConfig',
         name: 'BuildingConfig',
         component: () => import('@/views/buildingConfig/index'),
+        hidden:true,
         meta: {
           title: '建筑配置',
           icon: 'Moneymanagement',

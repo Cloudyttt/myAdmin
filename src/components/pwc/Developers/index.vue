@@ -142,7 +142,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E9%A1%B9%E7%9B%AE%E6%94%B6%E7%9B%8A-%E6%95%B4%E4%BD%93%E8%B4%A2%E5%8A%A1%E8%A1%A8%E7%8E%B0#') // http://localhost:3000/read_2/opfp
+            // TODO:请求echart数据
+            .get('') // http://localhost:3000/read_2/opfp
             .then(function (response) {
               that.loading = false;
               console.log('response', response);
@@ -305,7 +306,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E9%A1%B9%E7%9B%AE%E6%94%B6%E7%9B%8A')// http://localhost:3000/read_2/pb
+            // TODO:请求echart数据
+            .get('')// http://localhost:3000/read_2/pb
             .then(function (response) {
               that.loading = false;
 
@@ -433,7 +435,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E9%A1%B9%E7%9B%AE%E6%94%B6%E7%9B%8A%E7%8E%87')  // http://localhost:3000/read_2/ror
+            // TODO:请求echart数据
+            .get('')  // http://localhost:3000/read_2/ror
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -630,7 +633,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E8%82%A1%E4%B8%9C%E6%94%B6%E7%9B%8A%E7%8E%87')// http://localhost:3000/read_2/ros
+            // TODO:请求echart数据
+            .get('')// http://localhost:3000/read_2/ros
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -832,7 +836,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E9%A1%B9%E7%9B%AE%E6%94%B6%E5%85%A5')// http://localhost:3000/read_2/pr
+            // TODO:请求echart数据
+            .get('')// http://localhost:3000/read_2/pr
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -958,7 +963,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E5%9C%B0%E4%BB%B7%E6%88%90%E6%9C%AC') // http://localhost:3000/read_2/col
+            // TODO:请求echart数据
+            .get('') // http://localhost:3000/read_2/col
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -1040,7 +1046,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E7%BB%BC%E5%90%88%E6%88%90%E6%9C%AC') // http://localhost:3000/read_2/cc
+            // TODO:请求echart数据
+            .get('') // http://localhost:3000/read_2/cc
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -1122,7 +1129,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E9%A1%B9%E7%9B%AE%E8%9E%8D%E8%B5%84')// http://localhost:3000/read_2/pf
+            // TODO:请求echart数据
+            .get('')// http://localhost:3000/read_2/pf
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console

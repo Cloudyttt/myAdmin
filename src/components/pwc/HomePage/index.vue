@@ -1,224 +1,231 @@
 <template>
   <div class="homepage">
-    <el-container class="container">
-      <div class="sidebar" :class="{fadein:isVisibal, fadeout:!isVisibal}">
-        <div class="sidebar-left">
-          <el-container class="s-box">
-            <el-main class="s-box-option">
-              <el-container class="s-box-option-detail">
-                <el-main class="s-box-option-tools">
-                  <el-tabs
-                      v-model="activeTab"
-                      @tab-click="tagChangeHandler">
-                    <!--路由-->
-                    <el-tab-pane class="brushs" name="tab-1">
+    <transition name="fade-transform" mode="out-in">
+      <el-container class="container">
+        <div class="sidebar" :class="{fadein:isVisibal, fadeout:!isVisibal}">
+          <div class="sidebar-left">
+            <el-container class="s-box">
+              <el-main class="s-box-option">
+                <el-container class="s-box-option-detail">
+                  <el-main class="s-box-option-tools">
+                    <el-tabs
+                        v-model="activeTab"
+                        @tab-click="tagChangeHandler">
+                      <!--路由-->
+                      <el-tab-pane class="brushs" name="tab-1">
                       <span slot="label" class="brush-icon"><i class="el-icon-office-building"
                                                                style="font-size: 1.2rem"/>建筑</span>
-                      <el-footer class="s-box-option-others">
-                        <div class="sidebar-navBar">
-                          <el-menu :default-active="activeRouter"
-                                   class="el-menu-demo"
-                                   mode="horizontal"
-                                   text-color="rgb(0,204,255)"
-                                   active-text-color="#FFFFFF"
-                                   @select="handleSelect">
-                            <el-menu-item index="/developers" class="nav-dev"><span>开发商</span></el-menu-item>
-                            <el-menu-item index="/government" class="nav-gov"><span>政府</span></el-menu-item>
-                          </el-menu>
-                          <!--#b9b2ff-->
-                        </div>
+                        <el-footer class="s-box-option-others">
+                          <div class="sidebar-navBar">
+                            <el-menu :default-active="activeRouter"
+                                     class="el-menu-demo"
+                                     mode="horizontal"
+                                     text-color="rgb(0,204,255)"
+                                     active-text-color="#FFFFFF"
+                                     @select="handleSelect">
+                              <el-menu-item index="/developers" class="nav-dev"><span>开发商</span></el-menu-item>
+                              <el-menu-item index="/government" class="nav-gov"><span>政府</span></el-menu-item>
+                            </el-menu>
+                            <!--#b9b2ff-->
+                          </div>
+                          
+                          <div class="sidebar-navBar">
+                            <el-menu :default-active="layerType"
+                                     class="el-menu-demo"
+                                     mode="horizontal"
+                                     text-color="rgb(0,204,255)"
+                                     active-text-color="#FFFFFF"
+                                     @select="layerChange">
+                              <el-menu-item index="normalLayer" class="nav-dev"><span>普通层</span></el-menu-item>
+                              <el-menu-item index="typeLayer" class="nav-gov"><span>类型层</span></el-menu-item>
+                            </el-menu>
+                          </div>
+                          <div class="sidebar-thermodynamic">
+                            <span style="color:#fff; font-size: 1rem">热力图</span>
+                            <el-switch
+                                v-model="thermodynamic"
+                                @change="openThermodynamicChart">
+                            </el-switch>
+                          </div>
+                          
+                          <div class="sidebar-thermodynamic">
+                            <span style="color:#fff; font-size: 1rem">输入框</span>
+                            <el-switch
+                                v-model="modifyInput"
+                                @change="openModifyInput">
+                            </el-switch>
+                          </div>
                         
-                        <div class="sidebar-navBar">
-                          <el-menu :default-active="layerType"
-                                   class="el-menu-demo"
-                                   mode="horizontal"
-                                   text-color="rgb(0,204,255)"
-                                   active-text-color="#FFFFFF"
-                                   @select="layerChange">
-                            <el-menu-item index="normalLayer" class="nav-dev"><span>普通层</span></el-menu-item>
-                            <el-menu-item index="typeLayer" class="nav-gov"><span>类型层</span></el-menu-item>
-                          </el-menu>
-                        </div>
-                        <div class="sidebar-thermodynamic">
-                          <span style="color:#fff; font-size: 1rem">热力图</span>
-                          <el-switch
-                              v-model="thermodynamic"
-                              @change="openThermodynamicChart">
-                          </el-switch>
-                        </div>
-                        
-                        <div class="sidebar-thermodynamic">
-                          <span style="color:#fff; font-size: 1rem">输入框</span>
-                          <el-switch
-                              v-model="modifyInput"
-                              @change="openModifyInput">
-                          </el-switch>
-                        </div>
-                      
-                      </el-footer>
-                    </el-tab-pane>
-                    <!--类型-->
-                    <el-tab-pane class="brushs" name="tab-2">
-                      <span slot="label" class="brush-icon"><i class="el-icon-edit" style="font-size: 1.2rem"/>笔刷</span>
-                      <transition name="fade">
-                        <div class="block" v-show="pencilSize">
-                          <el-slider
-                              v-model="value2"
-                              :step="50"
-                              show-stops
-                              :show-tooltip="false"
-                              @change="handleChange"
-                              :marks="marks">
-                          </el-slider>
-                        </div>
-                      </transition>
-                      <el-footer class="s-box-option-others">
-                        <el-row>
-                          <el-col :span="24" style="background-color:transparent">
-                            <el-menu
-                                default-active="1"
-                                class="el-menu-vertical-demo"
-                                @open="handleOpen"
-                                @close="handleClose"
-                                background-color="transparent"
-                                text-color="#fff"
-                                active-text-color="#ffd04b">
-                              <el-submenu index="1">
-                                <template slot="title">
-                                  <div class="title-left">
-                                    <i class="iconfont icon-yingyong"></i>
-                                    <span style="font-size:1rem">类型</span>
-                                  </div>
-                                </template>
-                                <el-menu-item-group v-if="isDev">
-                                  <el-menu-item class="building-item" index="1-1" @click="talentApartment">人才公寓
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="1-2" @click="officeDevelopment">研发办公
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="1-3" @click="communityCenter">社群中心
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="1-4" @click="servicedApartments">服务式公寓
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="1-5" @click="retailBusiness">零售商业
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="1-6" @click="multiStorey">多层</el-menu-item>
-                                  <el-menu-item class="building-item" index="1-7" @click="smallHighRise">小高层
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="1-8" @click="highRise">高层</el-menu-item>
-                                  <el-menu-item class="building-item" index="1-9" @click="school">学校、医院等</el-menu-item>
-                                  <el-menu-item class="building-item" index="1-9" @click="shop">商铺</el-menu-item>
-                                </el-menu-item-group>
-                                <el-menu-item-group v-if="!isDev">
-                                  <el-menu-item class="building-item" index="2" @click="retailBusiness_g">
-                                    <span slot="title">商业零售</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="1" @click="talentApartment_g">
-                                    <span slot="title">人才公寓</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="4" @click="servicedApartments_g">
-                                    <span slot="title">服务式公寓</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="5" @click="RDOffice_smartCar_g">
-                                    <span slot="title">研发办公-智能汽车</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="6" @click="RDOffice_highEndEquipment_g">
-                                    <span slot="title">研发办公-高端装备</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="7" @click="RDOffice_intelligentHardware_g">
-                                    <span slot="title">研发办公-智能硬件</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="8" @click="RDOffice_biologicalMedicine_g">
-                                    <span slot="title">研发办公-生物医药</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="9"
-                                                @click="RDOffice_innovativeMedicalDevices_g">
-                                    <span slot="title">研发办公-医疗器械</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="3" @click="communityCenter_g">
-                                    <span slot="title">社群中心-健康服务</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="10" @click="multiStorey_g">
-                                    <span slot="title">多层</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="11" @click="smallHighRise_g">
-                                    <span slot="title">小高层</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="12" @click="highRise_g">
-                                    <span slot="title">高层</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="13" @click="school_g">
-                                    <span slot="title">学校医院等</span>
-                                  </el-menu-item>
-                                  <el-menu-item class="building-item" index="14" @click="shop_g">
-                                    <span slot="title">商铺</span>
-                                  </el-menu-item>
-                                </el-menu-item-group>
-                              </el-submenu>
-                              <el-menu-item index="1" @click="rise">
-                                &nbsp;
-                                <span class="svg-container">
+                        </el-footer>
+                      </el-tab-pane>
+                      <!--类型-->
+                      <el-tab-pane class="brushs" name="tab-2">
+                        <span slot="label" class="brush-icon"><i class="el-icon-edit"
+                                                                 style="font-size: 1.2rem"/>笔刷</span>
+                        <transition name="fade">
+                          <div class="block" v-show="pencilSize">
+                            <el-slider
+                                v-model="value2"
+                                :step="50"
+                                show-stops
+                                :show-tooltip="false"
+                                @change="handleChange"
+                                :marks="marks">
+                            </el-slider>
+                          </div>
+                        </transition>
+                        <el-footer class="s-box-option-others">
+                          <el-row>
+                            <el-col :span="24" style="background-color:transparent">
+                              <el-menu
+                                  default-active="1"
+                                  class="el-menu-vertical-demo"
+                                  @open="handleOpen"
+                                  @close="handleClose"
+                                  background-color="transparent"
+                                  text-color="#fff"
+                                  active-text-color="#ffd04b">
+                                <el-submenu index="1">
+                                  <template slot="title">
+                                    <div class="title-left">
+                                      <i class="iconfont icon-yingyong"></i>
+                                      <span style="font-size:1rem">类型</span>
+                                    </div>
+                                  </template>
+                                  <el-menu-item-group v-if="isDev">
+                                    <el-menu-item class="building-item" index="1-1" @click="talentApartment">人才公寓
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-2" @click="officeDevelopment">研发办公
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-3" @click="communityCenter">社群中心
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-4" @click="servicedApartments">服务式公寓
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-5" @click="retailBusiness">零售商业
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-6" @click="multiStorey">多层
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-7" @click="smallHighRise">小高层
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-8" @click="highRise">高层</el-menu-item>
+                                    <el-menu-item class="building-item" index="1-9" @click="school">学校、医院等
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1-9" @click="shop">商铺</el-menu-item>
+                                  </el-menu-item-group>
+                                  <el-menu-item-group v-if="!isDev">
+                                    <el-menu-item class="building-item" index="2" @click="retailBusiness_g">
+                                      <span slot="title">商业零售</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="1" @click="talentApartment_g">
+                                      <span slot="title">人才公寓</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="4" @click="servicedApartments_g">
+                                      <span slot="title">服务式公寓</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="5" @click="RDOffice_smartCar_g">
+                                      <span slot="title">研发办公-智能汽车</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="6" @click="RDOffice_highEndEquipment_g">
+                                      <span slot="title">研发办公-高端装备</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="7"
+                                                  @click="RDOffice_intelligentHardware_g">
+                                      <span slot="title">研发办公-智能硬件</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="8"
+                                                  @click="RDOffice_biologicalMedicine_g">
+                                      <span slot="title">研发办公-生物医药</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="9"
+                                                  @click="RDOffice_innovativeMedicalDevices_g">
+                                      <span slot="title">研发办公-医疗器械</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="3" @click="communityCenter_g">
+                                      <span slot="title">社群中心-健康服务</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="10" @click="multiStorey_g">
+                                      <span slot="title">多层</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="11" @click="smallHighRise_g">
+                                      <span slot="title">小高层</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="12" @click="highRise_g">
+                                      <span slot="title">高层</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="13" @click="school_g">
+                                      <span slot="title">学校医院等</span>
+                                    </el-menu-item>
+                                    <el-menu-item class="building-item" index="14" @click="shop_g">
+                                      <span slot="title">商铺</span>
+                                    </el-menu-item>
+                                  </el-menu-item-group>
+                                </el-submenu>
+                                <el-menu-item index="1" @click="rise">
+                                  &nbsp;
+                                  <span class="svg-container">
                                   <svg-icon icon-class="arrow-up"/>
                                 </span>
-                                <span slot="title" style="font-size: 1rem">  &nbsp;升高</span>
-                              </el-menu-item>
-                              <el-menu-item index="2" @click="lower">
-                                &nbsp;
-                                <span class="svg-container">
+                                  <span slot="title" style="font-size: 1rem">  &nbsp;升高</span>
+                                </el-menu-item>
+                                <el-menu-item index="2" @click="lower">
+                                  &nbsp;
+                                  <span class="svg-container">
                                   <svg-icon icon-class="arrow-down"/>
                                 </span>
-                                <span slot="title" style="font-size: 1rem">  &nbsp;降低</span>
-                              </el-menu-item>
-                              <el-menu-item index="3" @click="_delete">
-                                &nbsp;
-                                <span class="svg-container">
+                                  <span slot="title" style="font-size: 1rem">  &nbsp;降低</span>
+                                </el-menu-item>
+                                <el-menu-item index="3" @click="_delete">
+                                  &nbsp;
+                                  <span class="svg-container">
                                   <svg-icon icon-class="close"/>
                                 </span>
-                                <span slot="title" style="font-size: 1rem">  &nbsp;删除</span>
-                              </el-menu-item>
-                              <el-menu-item index="4" @click="resume">
-                                &nbsp;
-                                <span class="svg-container">
+                                  <span slot="title" style="font-size: 1rem">  &nbsp;删除</span>
+                                </el-menu-item>
+                                <el-menu-item index="4" @click="resume">
+                                  &nbsp;
+                                  <span class="svg-container">
                                   <svg-icon icon-class="history"/>
                                 </span>
-                                <span slot="title" style="font-size: 1rem">  &nbsp;恢复</span>
-                              </el-menu-item>
-                            </el-menu>
-                          </el-col>
-                        </el-row>
-                      </el-footer>
-                    </el-tab-pane>
-                  </el-tabs>
-                </el-main>
-              </el-container>
-            </el-main>
-          </el-container>
-        </div>
-        <div class="sidebar-button" @click="showSiderbar">
-          <div class="fade-button">
-            <i class="el-icon-d-arrow-left" v-show="isVisibal"/>
-            <i class="el-icon-d-arrow-right" v-show="!isVisibal"/>
+                                  <span slot="title" style="font-size: 1rem">  &nbsp;恢复</span>
+                                </el-menu-item>
+                              </el-menu>
+                            </el-col>
+                          </el-row>
+                        </el-footer>
+                      </el-tab-pane>
+                    </el-tabs>
+                  </el-main>
+                </el-container>
+              </el-main>
+            </el-container>
+          </div>
+          <div class="sidebar-button" @click="showSiderbar">
+            <div class="fade-button">
+              <i class="el-icon-d-arrow-left" v-show="isVisibal"/>
+              <i class="el-icon-d-arrow-right" v-show="!isVisibal"/>
+            </div>
           </div>
         </div>
-      </div>
-      <el-main class="container-el-main">
-        <!--<iframe
-            class="my-iframe"
-            frameborder="0"
-            scrolling="no"
-            src="static/PWCD_Web/index.html">
-        </iframe>-->
-        <iframe
-            class="my-iframe"
-            frameborder="0"
-            scrolling="no"
-            src="static/aaa.html">
-        </iframe>
-        <div class="container-main">
-          <developers v-if="this.isDev"/>
-          <government v-if="!this.isDev"/>
-        </div>
-      </el-main>
-    </el-container>
+        <el-main class="container-el-main">
+          <!--<iframe
+              class="my-iframe"
+              frameborder="0"
+              scrolling="no"
+              src="static/PWCD_Web/index.html">
+          </iframe>-->
+          <iframe
+              class="my-iframe"
+              frameborder="0"
+              scrolling="no"
+              src="static/aaa.html">
+          </iframe>
+          <div class="container-main">
+            <developers v-if="this.isDev"/>
+            <government v-if="!this.isDev"/>
+          </div>
+        </el-main>
+      </el-container>
+    </transition>
     <el-button icon="el-icon-back" circle plain class="backBtn" @click="$router.push({path:'/'})"/>
   </div>
 </template>
@@ -231,7 +238,7 @@
     name: 'HomePage',
     data() {
       return {
-        pwcData:'',
+        pwcData: '',
         activeTab: 'tab-1',
         thermodynamic: false, //热力图
         modifyInput: false, // 输入框
@@ -300,9 +307,7 @@
       this.pwcData = this.$route.params
       console.log('this.pwcData', this.pwcData)
     },
-    watch: {
-    
-    },
+    watch: {},
     methods: {
       //输入框
       openModifyInput(val) {
@@ -985,10 +990,11 @@
     top: 0;
     left: 0;
     bottom: 0;
-.backBtn{
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-}
+  
+  .backBtn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+  }
 
 </style>

@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column label="数据来源" class-name="status-col" align="center">
         <template slot-scope="{row}">
-            {{ row.xlsAddr }}
+          {{ row.xlsAddr }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="150px">
@@ -60,14 +60,14 @@
         <el-form-item label="Mapbox ID">
           <el-input v-model="form.mapboxId"/>
         </el-form-item>
-        <el-form-item label="数据来源">
+        <!--<el-form-item label="数据来源">
           <el-input v-model="form.xlsAddr"/>
-        </el-form-item>
-        <el-form-item label="Excel JSON">
-          <el-input type="textarea" v-model="form.xlsJson"/>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item label="Mesh JSON">
           <el-input type="textarea" v-model="form.meshJson"/>
+        </el-form-item>
+        <el-form-item label="Excel JSON">
+          <el-button type="success" plain @click="routerToBuildingConfig">详细建筑配置修改</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -107,6 +107,7 @@
   }, {})
 
   export default {
+    buildingConfigVisibal: false,
     name: 'ComplexTable',
     components: {Pagination},
     directives: {waves},
@@ -145,10 +146,10 @@
         form: {
           id: 0,
           title: '',
-          mapboxId:'',
+          mapboxId: '',
           xlsAddr: '',
-          xlsJson:'',
-          meshJson:'',
+          xlsJson: '',
+          meshJson: '',
         },
         dialogFormVisible: false,
         dialogStatus: 'update',
@@ -187,6 +188,18 @@
           this.total = this.list.length
           this.listLoading = false
         })
+      },
+      routerToBuildingConfig() {
+        this.$refs.dataForm.validate(valid => {
+          if (valid) {
+            let temp = Object.assign({}, this.form)
+            this.$router.push({name: 'BuildingConfig', params: {data: temp, from: 'Table'}})
+          } else {
+            this.failMsg('请先正确填写表单其他部分！')
+            return false
+          }
+        });
+        
       },
       resetTemp() {
         this.temp = {
@@ -227,12 +240,19 @@
         this.dialogFormVisible = true
       },
       updateData() {
-        this.dialogFormVisible = false
-        console.log('this.form.date--->', new Date(this.form.date));
-        updateProject({token: this.token, data: this.form}).then(response => {
-          console.log('response', response);
-          this.fetchData()
-        })
+        this.$refs.dataForm.validate(valid => {
+          if (valid) {
+            this.dialogFormVisible = false
+            console.log('this.form.date--->', new Date(this.form.date));
+            updateProject({token: this.token, data: this.form}).then(response => {
+              console.log('response', response);
+              this.fetchData()
+            })
+          } else {
+            this.failMsg('请先正确填写表单！')
+            return false
+          }
+        });
       },
       parseTime(date) {
         let year = date.getFullYear();

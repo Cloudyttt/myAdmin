@@ -141,7 +141,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E5%9C%9F%E5%9C%B0%E5%87%BA%E8%AE%A9%E6%94%B6%E5%85%A5')// http://localhost:3000/read_gov_2/iflt
+            // TODO:请求echart数据
+            .get('')// http://localhost:3000/read_gov_2/iflt
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -223,7 +224,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E5%9C%9F%E5%9C%B0%E5%87%BA%E8%AE%A9%E7%A8%8E%E6%94%B6')// http://localhost:3000/read_gov_2/tnlt
+            // TODO:请求echart数据
+            .get('')// http://localhost:3000/read_gov_2/tnlt
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -310,7 +312,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E5%B1%85%E4%BD%8F%E4%BA%BA%E5%8F%A3')//http://localhost:3000/read_gov_2/rp
+            // TODO:请求echart数据
+            .get('')//http://localhost:3000/read_gov_2/rp
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -420,7 +423,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E5%B0%B1%E4%B8%9A%E4%BA%BA%E5%8F%A3')//http://localhost:3000/read_gov_2/ep
+            // TODO:请求echart数据
+            .get('')//http://localhost:3000/read_gov_2/ep
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -530,7 +534,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E4%BA%BA%E5%9D%87%E7%BB%BF%E5%9C%B0%E9%9D%A2%E7%A7%AF')//http://localhost:3000/read_gov_2/gapc
+            // TODO:请求echart数据
+            .get('')//http://localhost:3000/read_gov_2/gapc
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -633,7 +638,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/GDP')//http://localhost:3000/read_gov_2/gdp
+            // TODO:请求echart数据
+            .get('')//http://localhost:3000/read_gov_2/gdp
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -742,7 +748,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E8%83%BD%E8%80%97') // http://localhost:3000/read_gov_2/ec
+            // TODO:请求echart数据
+            .get('') // http://localhost:3000/read_gov_2/ec
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
@@ -898,7 +905,8 @@
         if (this.isGraphVisibal === true) {
           this.loading = true;
           this.axios
-            .get('http://localhost:8080/workbook/%E4%BA%A7%E4%B8%9A%E7%A8%8E%E6%94%B6')// http://localhost:3000/read_gov_2/it
+            // TODO:请求echart数据
+            .get('')// http://localhost:3000/read_gov_2/it
             .then(function (response) {
               that.loading = false;
               // eslint-disable-next-line no-console
