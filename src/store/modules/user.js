@@ -49,9 +49,9 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const {name, avatar} = data
-
-        commit('SET_NAME', name)
+        const {username, avatar} = data
+        console.log('username', username);
+        commit('SET_NAME', username)
         commit('SET_AVATAR', avatar)
         resolve(data)
       }).catch(error => {
@@ -65,6 +65,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout({token: state.token}).then(() => {
         commit('SET_TOKEN', '')
+        commit('SET_NAME', '')
         removeToken()
         resetRouter()
         resolve()
@@ -78,6 +79,7 @@ const actions = {
   resetToken({commit}) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
+      commit('SET_NAME', '')
       removeToken()
       resolve()
     })

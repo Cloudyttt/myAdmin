@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
@@ -11,16 +12,18 @@ router.post('/getList', function (req, res, next) {
   console.log('|------------------------- getList -------------------------|');
   let {token} = req.body
   console.log('token =>', token);
-  let sql = `select * from tables`
-  let promise = query(sql);
   let verifyPromise = verify(token);
   verifyPromise.then(decode => {
     console.log('decode', decode);
+    let userId = decode.id
+    let sql = `select * from tables where userId = ${userId}`
+    let promise = query(sql);
     promise.then(result => {
       /*console.log(result);*/
       console.log(result[0]);
       let resData = {
         code: 200,
+        author: decode.aud,
         data: result
       }
       res.send(resData)
@@ -79,14 +82,11 @@ router.post('/updateProject', function (req, res, next) {
   console.log('|------------------------- updateProject -------------------------|');
   let {token, data} = req.body
   console.log('token,data =>', token, data);
-  let {id, title, status, date, desc, author} = data
-
-  date = date.split('T')[0]
-  console.log('date: ', date);
+  let {id, title, mapboxId, xlsAddr, xlsJson, meshJson} = data
   let verifyPromise = verify(token);
   verifyPromise.then(decode => {
     console.log('decode', decode);
-    let updateSql = `update tables set title=\'${title}\',status=\'${status}\',date=\'${date}\', description=\'${desc}\', author=\'${author}\' where id=${id}`;
+    let updateSql = `update tables set title='${title}',mapboxId='${mapboxId}',xlsAddr='${xlsAddr}', xlsJson='${xlsJson}', meshJson='${meshJson}' where id=${id}`;
     let promise = query(updateSql);
     promise.then(result => {
       console.log(result);
@@ -115,14 +115,11 @@ router.post('/updateProject', function (req, res, next) {
 router.post('/createProject', function (req, res, next) {
   console.log('|------------------------- createProject -------------------------|');
   let {token, project} = req.body
-  let {title, author, date, desc, status} = project
-  date = date.split('T')[0];
-  console.log({title, author, date, desc, status})
-  // console.log('token, project =>', token, project);
-  let insertSql = `insert into tables (title, status, author, date, description) values (\'${title}\',\'${status}\',\'${author}\',\'${date}\',\'${desc}\')`;
+  let {id, title, mapboxId, xlsAddr, xlsJson, meshJson} = project
   let verifyPromise = verify(token);
   verifyPromise.then(decode => {
     console.log('decode', decode);
+    let insertSql = `insert into tables (userId, mapboxId, title, xlsAddr, xlsJson, meshJson) values (${decode.id},'${mapboxId}','${title}','${xlsAddr}','${xlsJson}','${meshJson}')`;
     let promise = query(insertSql);
     promise.then(result => {
       console.log(result);

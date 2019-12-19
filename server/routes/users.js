@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 const router = express.Router();
 const mysql = require('mysql');
@@ -47,7 +48,7 @@ router.post('/login', async function (req, res, next) {
   console.log('data', data);
   let username = data.username;
   let password = data.password;
-  let sql = `select * from users where username = \'${username}\' and password = \'${password}\'`;
+  let sql = `select * from users where username = '${username}' and password = '${password}'`;
   let promise = query(sql);
   let resData = {}
   // 查询数据库
@@ -55,17 +56,17 @@ router.post('/login', async function (req, res, next) {
     // 查询数据库成功！
     if (result.length !== 0) {
       let id = result[0].id // 用户id
-      let token = 'admin-token' // 账号密码验证通过后才会生成token
+      let username = result[0].username // 用户名
 
       // JWT验证
       // JWT有效负荷
       let payload = {
         iss: 'Cloudy',
-        aud: 'admin',
+        aud: username,
         id: id,
       }
       // 异步JWT生成令牌
-      let trueToken = jwt.sign(payload, secretKey, signOptions, (err, token) => {
+      jwt.sign(payload, secretKey, signOptions, (err, token) => {
         if (err) {
           console.log('err', err);
           resData = {

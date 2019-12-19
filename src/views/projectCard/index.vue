@@ -16,22 +16,25 @@
             修改
           </el-button>
         </div>
-        <el-row :gutter="20" style="padding: 8px 0">
-          <el-col :span="6" style="border-right: 1px solid lightgray; vertical-align: middle"><el-tag size="mini">项目名称</el-tag></el-col>
-          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.title}}</el-col>
-        </el-row>
-        <el-row :gutter="20" style="padding: 8px 0">
-          <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">负责人</el-tag></el-col>
-          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.author}}</el-col>
-        </el-row>
-        <el-row :gutter="20" style="padding: 8px 0">
-          <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">进度</el-tag></el-col>
-          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.status}}</el-col>
-        </el-row>
-        <el-row :gutter="20" style="padding: 8px 0">
-          <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">日期</el-tag></el-col>
-          <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{parseTime(new Date(item.date))}}</el-col>
-        </el-row>
+        <div class="card-main" @click="showPWC(index)">
+          <el-row :gutter="20" style="padding: 8px 0">
+            <el-col :span="6" style="border-right: 1px solid lightgray; vertical-align: middle"><el-tag size="mini">项目名称</el-tag></el-col>
+            <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.title}}</el-col>
+          </el-row>
+          <el-row :gutter="20" style="padding: 8px 0">
+            <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">负责人</el-tag></el-col>
+            <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{author}}</el-col>
+          </el-row>
+          <el-row :gutter="20" style="padding: 8px 0">
+            <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">数据来源</el-tag></el-col>
+            <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.xlsAddr}}</el-col>
+          </el-row>
+          <el-row :gutter="20" style="padding: 8px 0">
+            <el-col :span="6" style="border-right: 1px solid lightgray"><el-tag size="mini">Mapbox ID</el-tag></el-col>
+            <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.mapboxId}}</el-col>
+          </el-row>
+        </div>
+        
       </el-card>
     </div>
   
@@ -42,40 +45,34 @@
         :limit.sync="listQuery.limit"
         style=""
         @pagination="fetchData"/>
-    
+  
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" center>
-      <el-form ref="dataForm" :rules="rules" :model="form" label-position="left" label-width="70px"
+      <el-form ref="dataForm" :rules="rules" :model="form" label-position="left" label-width="100px"
                style="padding: 0 50px">
         <el-form-item label="名称" prop="title">
           <el-input v-model="form.title"/>
         </el-form-item>
         <el-form-item label="负责人">
-          <el-input v-model="form.author"/>
+          <el-input v-model="author" disabled/>
         </el-form-item>
-        <el-form-item label="进度">
-          <el-select v-model="form.status" placeholder="选择项目当前状态">
-            <el-option label="未完成" value="未完成"/>
-            <el-option label="进行中" value="进行中"/>
-            <el-option label="已完成" value="已完成"/>
-          </el-select>
+        <el-form-item label="Mapbox ID">
+          <el-input v-model="form.mapboxId"/>
         </el-form-item>
-        <el-form-item label="日期">
-          <el-col :span="11">
-            <el-date-picker v-model="form.date" type="date" placeholder="选择一个日期" style="width: 100%;"/>
-          </el-col>
+        <el-form-item label="数据来源">
+          <el-input v-model="form.xlsAddr"/>
         </el-form-item>
-        <el-form-item label="即时交付">
-          <el-switch v-model="form.delivery"/>
+        <!--<el-form-item label="Excel JSON">
+          <el-input type="textarea" v-model="form.xlsJson"/>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.desc" type="textarea"/>
-        </el-form-item>
+        <el-form-item label="Mesh JSON">
+          <el-input type="textarea" v-model="form.meshJson"/>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
           取消
         </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
+        <el-button type="primary" @click="updateData()">
           确认修改
         </el-button>
       </div>
@@ -84,15 +81,9 @@
 </template>
 
 <script>
-  // eslint-disable-next-line no-unused-vars
   import {getList, updateProject, deleteProject} from '@/api/table'
-  // eslint-disable-next-line no-unused-vars
   import {getToken} from '@/utils/auth' // get token from cookie
-  // eslint-disable-next-line no-unused-vars
   import waves from '@/directive/waves' // waves directive
-  // eslint-disable-next-line no-unused-vars
-  import {parseTime} from '@/utils/index'
-  // eslint-disable-next-line no-unused-vars
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
   export default {
     name: "projectCard",
@@ -110,6 +101,7 @@
     },
     data() {
       return {
+        author:'',
         tableKey: 0,
         list: [],
         total: 1,
@@ -121,11 +113,9 @@
         form: {
           id: 0,
           title: '',
-          status: '未完成',
-          date: '',
-          delivery: false,
-          desc: '',
-          author: 'Cloudy'
+          xlsAddr: '',
+          meshJson:'',
+          ExcelJson:''
         },
         dialogFormVisible: false,
         dialogStatus: '',
@@ -153,6 +143,9 @@
       this.fetchData()
     },
     methods: {
+      showPWC(index){
+        this.$router.push({name:'Homepage', params:this.list[index]})
+      },
       openWarning(index) {
         this.$confirm('此操作将永久删除该项目, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -174,8 +167,8 @@
       fetchData() {
         this.listLoading = true
         getList({token: this.token}).then(response => {
-          this.list = response.data;
-          // console.log('this.list', this.list);
+          this.list = response.data
+          this.author = response.author
           this.total = this.list.length
           this.listLoading = false
         })
@@ -207,18 +200,13 @@
         })
       },
       handleUpdate(index) {
-        console.log('row', this.list[index]);
-        this.temp = Object.assign({}, this.list[index]) // copy obj
-        console.log('this.temp', this.temp);
-
-
+        this.temp = Object.assign({}, this.queryData[index]) // copy obj
         this.form.title = this.temp.title
-        this.form.date = parseTime(new Date(this.temp.date))
-        this.form.status = this.temp.status
-        this.form.desc = this.temp.desc
-        this.form.author = this.temp.author
         this.form.id = this.temp.id
-
+        this.form.xlsAddr = this.temp.xlsAddr
+        this.form.meshJson = this.temp.meshJson
+        this.form.mapboxId = this.temp.mapboxId
+        this.form.xlsJson = this.temp.xlsJson
         this.editIndex = index;
         this.dialogStatus = 'update'
         this.dialogFormVisible = true
@@ -279,6 +267,9 @@
   }
   .clearfix:after {
     clear: both
+  }
+  .card-main{
+    cursor: pointer;
   }
 </style>
 

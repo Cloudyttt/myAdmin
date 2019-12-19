@@ -44,35 +44,21 @@ export const constantRoutes = [
     path: '/',
     name: 'Layout',
     component: Layout,
-    redirect: '/homepage',
+    redirect: '/projectCard',
     meta: {
       title: '首页',
       icon: 'home',
     },
     children: [
       {
-        path: '/homepage',
-        name: 'homepage',
-        component: () => import('components/HomePage/index'),
-        /*children: [
-          {
-            path: '/developers',
-            name: 'developers',
-            component: () => import('components/Developers/index'),
-            hidden: true
-          },
-          {
-            path: '/government',
-            name: 'government',
-            component: () => import('components/Government/index'),
-            hidden: true
-          }
-        ],*/
+        path: 'projectCard',
+        name: 'ProjectCard',
+        component: () => import('@/views/projectCard/index'),
         meta: {
-          title: 'PWC',
-          icon: 'home',
-        },
-      }
+          title: '我的项目',
+          icon: 'integral',
+        }
+      },
       /*{
       path: 'dashboard',
       name: 'Dashboard',
@@ -84,21 +70,6 @@ export const constantRoutes = [
       children: []
     }*/
     ]
-  },
-  {
-    path: '/projectCard',
-    name: 'Layout',
-    component: Layout,
-    redirect: '/projectCard',
-    children: [{
-      path: 'projectCard',
-      name: 'ProjectCard',
-      component: () => import('@/views/projectCard/index'),
-      meta: {
-        title: '项目卡片',
-        icon: 'integral',
-      }
-    }]
   },
   {
     path: '/project',
@@ -128,22 +99,16 @@ export const constantRoutes = [
           icon: 'add'
         }
       },
-    ]
-  },
-  {
-    path: '/buildingConfig',
-    name: 'Layout',
-    component: Layout,
-    redirect: '/buildingConfig',
-    children: [{
-      path: 'buildingConfig',
-      name: 'BuildingConfig',
-      component: () => import('@/views/buildingConfig/index'),
-      meta: {
-        title: '建筑配置',
-        icon: 'Moneymanagement',
+      {
+        path: 'buildingConfig',
+        name: 'BuildingConfig',
+        component: () => import('@/views/buildingConfig/index'),
+        meta: {
+          title: '建筑配置',
+          icon: 'Moneymanagement',
+        }
       }
-    }]
+    ]
   },
   {
     path: '/adminer',
@@ -159,6 +124,17 @@ export const constantRoutes = [
         icon: 'certified-supplier',
       }
     }]
+  },
+  {
+    path: '/homepage',
+    name: 'Homepage',
+    component: () => import('components/pwc/HomePage/index'),
+    props:true,
+    hidden:true,
+    meta: {
+      title: 'PWC',
+      icon: 'home',
+    },
   },
   // 404 page must be placed at the end !!!
   {path: '*', redirect: '/404', hidden: true}

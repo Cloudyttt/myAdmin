@@ -13,26 +13,24 @@
           <span>{{ scope.$index+1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名称" min-width="150px">
+      <el-table-column label="项目名称" min-width="150px">
         <template slot-scope="{row}">
           <span class="link-type" @click="handleUpdate(row)">{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="负责人" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+      <el-table-column label="项目负责人" align="center">
+        <template>
+          <span>{{ author }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="进度" class-name="status-col" align="center">
+      <el-table-column label="Mapbox ID" class-name="status-col" align="center">
         <template slot-scope="{row}">
-          <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
-          </el-tag>
+          {{ row.mapboxId }}
         </template>
       </el-table-column>
-      <el-table-column label="日期" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.date}}</span>
+      <el-table-column label="数据来源" class-name="status-col" align="center">
+        <template slot-scope="{row}">
+            {{ row.xlsAddr }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="150px">
@@ -51,31 +49,25 @@
                 @pagination="fetchData"/>
     
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" center>
-      <el-form ref="dataForm" :rules="rules" :model="form" label-position="left" label-width="70px"
+      <el-form ref="dataForm" :rules="rules" :model="form" label-position="left" label-width="100px"
                style="padding: 0 50px">
         <el-form-item label="名称" prop="title">
           <el-input v-model="form.title"/>
         </el-form-item>
         <el-form-item label="负责人">
-          <el-input v-model="form.author"/>
+          <el-input v-model="author" disabled/>
         </el-form-item>
-        <el-form-item label="进度">
-          <el-select v-model="form.status" placeholder="选择项目当前状态">
-            <el-option label="未开始" value="未开始"/>
-            <el-option label="进行中" value="进行中"/>
-            <el-option label="已完成" value="已完成"/>
-          </el-select>
+        <el-form-item label="Mapbox ID">
+          <el-input v-model="form.mapboxId"/>
         </el-form-item>
-        <el-form-item label="日期">
-          <el-col :span="11">
-            <el-date-picker v-model="form.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd" type="date" placeholder="选择一个日期" style="width: 100%;"/>
-          </el-col>
+        <el-form-item label="数据来源">
+          <el-input v-model="form.xlsAddr"/>
         </el-form-item>
-        <el-form-item label="即时交付">
-          <el-switch v-model="form.delivery"/>
+        <el-form-item label="Excel JSON">
+          <el-input type="textarea" v-model="form.xlsJson"/>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.desc" type="textarea"/>
+        <el-form-item label="Mesh JSON">
+          <el-input type="textarea" v-model="form.meshJson"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -141,6 +133,7 @@
     },
     data() {
       return {
+        author: 'Cloudy',
         tableKey: 0,
         list: [],
         total: 1,
@@ -152,11 +145,10 @@
         form: {
           id: 0,
           title: '',
-          status: '未完成',
-          date: '',
-          delivery: false,
-          desc: '',
-          author: 'Cloudy'
+          mapboxId:'',
+          xlsAddr: '',
+          xlsJson:'',
+          meshJson:'',
         },
         dialogFormVisible: false,
         dialogStatus: 'update',
@@ -188,6 +180,8 @@
         this.listLoading = true
         getList({token: this.token}).then(response => {
           this.list = response.data;
+          this.author = response.author;
+          console.log('this.list', this.list);
           console.log('this.list[0].date=>', this.list[0].date);
           // console.log('this.list', this.list);
           this.total = this.list.length
@@ -223,14 +217,11 @@
       handleUpdate(index) {
         this.temp = Object.assign({}, this.queryData[index]) // copy obj
         this.form.title = this.temp.title
-        console.log('this.temp.date', this.temp.date);
-        this.form.date = this.temp.date
-        this.form.status = this.temp.status
-        this.form.desc = this.temp.desc
-        this.form.author = this.temp.author
         this.form.id = this.temp.id
-        // console.log('temp:', this.temp);
-        // console.log('this.form', this.form);
+        this.form.xlsAddr = this.temp.xlsAddr
+        this.form.meshJson = this.temp.meshJson
+        this.form.mapboxId = this.temp.mapboxId
+        this.form.xlsJson = this.temp.xlsJson
         this.editIndex = index;
         this.dialogStatus = 'update'
         this.dialogFormVisible = true

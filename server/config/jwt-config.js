@@ -6,7 +6,6 @@ let signOptions = {
   expiresIn: '7d',
 }
 let verifyOptions = {
-  audience: 'admin',
   issuer: 'Cloudy',
   complete: false
 }

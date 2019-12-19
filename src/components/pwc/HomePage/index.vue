@@ -219,17 +219,19 @@
         </div>
       </el-main>
     </el-container>
+    <el-button icon="el-icon-back" circle plain class="backBtn" @click="$router.push({path:'/'})"/>
   </div>
 </template>
 
 <script>
-  import developers from 'components/Developers/index'
-  import government from 'components/Government/index'
+  import developers from 'components/pwc/Developers/index'
+  import government from 'components/pwc/Government/index'
 
   export default {
     name: 'HomePage',
     data() {
       return {
+        pwcData:'',
         activeTab: 'tab-1',
         thermodynamic: false, //热力图
         modifyInput: false, // 输入框
@@ -294,7 +296,13 @@
       })
 
     },
-    watch: {},
+    created() {
+      this.pwcData = this.$route.params
+      console.log('this.pwcData', this.pwcData)
+    },
+    watch: {
+    
+    },
     methods: {
       //输入框
       openModifyInput(val) {
@@ -977,6 +985,10 @@
     top: 0;
     left: 0;
     bottom: 0;
-
+.backBtn{
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+}
 
 </style>

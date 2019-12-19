@@ -3,7 +3,7 @@
     <el-table
         border
         stripe
-        :data="tableData"
+        :data="configData"
         style="width: 100%"
         :row-style="{height:'20px'}"
         :cell-style="{padding:'5px'}">
@@ -35,38 +35,36 @@
         </template>
       </el-table-column>
     </el-table>
-    
     <el-dialog title="建筑配置 - 修改" :visible.sync="dialogFormVisible" center>
-      <el-form ref="dataForm" :model="form" label-position="left" label-width="220px"
+      <el-form ref="dataForm" :model="configForm" label-position="left" label-width="220px"
                style="padding: 0 50px" :rules="rules">
         <el-form-item label="出租单价 (含税，元/平方米/天)" prop="rentUnitPrice">
-          <el-input v-model="form.rentUnitPrice" size="small" :disabled="form.rentUnitPrice==='/'"/>
+          <el-input v-model="configForm.rentUnitPrice" size="small" :disabled="configForm.rentUnitPrice==='/'"/>
         </el-form-item>
         <el-form-item label="销售单价（含税，元/平方米）" prop="sellUnitPrice">
-          <el-input v-model="form.sellUnitPrice" size="small" :disabled="form.sellUnitPrice==='/'"/>
+          <el-input v-model="configForm.sellUnitPrice" size="small" :disabled="configForm.sellUnitPrice==='/'"/>
         </el-form-item>
         <el-form-item label="土地成本（元/平方米）" prop="landCost">
-          <el-input v-model="form.landCost" size="small" :disabled="form.landCost==='/'"/>
+          <el-input v-model="configForm.landCost" size="small" :disabled="configForm.landCost==='/'"/>
         </el-form-item>
         <el-form-item label="开发成本" prop="developmentCost">
-          <el-input v-model="form.developmentCost" size="small" :disabled="form.developmentCost==='/'"/>
+          <el-input v-model="configForm.developmentCost" size="small" :disabled="configForm.developmentCost==='/'"/>
         </el-form-item>
         <el-form-item label="就业人口（人）" prop="employmentPopulation">
-          <el-input v-model="form.employmentPopulation" :disabled="form.employmentPopulation==='/'"/>
+          <el-input v-model="configForm.employmentPopulation" :disabled="configForm.employmentPopulation==='/'"/>
         </el-form-item>
         <el-form-item label="居住人口（人）" prop="residentPopulation">
-          <el-input v-model="form.residentPopulation" :disabled="form.residentPopulation==='/'"/>
+          <el-input v-model="configForm.residentPopulation" :disabled="configForm.residentPopulation==='/'"/>
         </el-form-item>
         <el-form-item label="能耗（吨标准煤/平方米/年）" prop="energyConsumption">
-          <el-input v-model="form.energyConsumption" size="small" :disabled="form.energyConsumption==='/'"/>
+          <el-input v-model="configForm.energyConsumption" size="small" :disabled="configForm.energyConsumption==='/'"/>
         </el-form-item>
         <el-form-item label="税收强度（万元/年）" prop="taxRevenue">
-          <el-input v-model="form.taxRevenue" size="small" :disabled="form.taxRevenue==='/'"/>
+          <el-input v-model="configForm.taxRevenue" size="small" :disabled="configForm.taxRevenue==='/'"/>
         </el-form-item>
         <el-form-item label="GDP（万元/年）" prop="gdp">
-          <el-input v-model="form.gdp" size="small" :disabled="form.gdp==='/'"/>
+          <el-input v-model="configForm.gdp" size="small" :disabled="configForm.gdp==='/'"/>
         </el-form-item>
-      
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">
@@ -77,6 +75,8 @@
         </el-button>
       </div>
     </el-dialog>
+    <el-button type="primary" plain style="float: right; margin: 40px 20px 0 0" @click="$router.push({name:'Form'})">返回</el-button>
+    <el-button type="primary" style="float: right; margin: 40px 20px 0 0" @click="saveBuildingConfig">保存</el-button>
   </div>
 </template>
 
@@ -87,7 +87,7 @@
       let checkInput = (rule, value, callback) => {
         // let patt = /^\d+(\.\d+)?$/
         // let patt = /(^\d+(\.\d+)?$)|(^[1-9]+\d*$)/
-        let patt = /(^[1-9]+\.\d+$)|(^[1-9]+\d*$)|(^0\.\d+$)/
+        let patt = /(^[1-9]+\.\d+$)|(^[1-9]+\d*$)|(^0\.\d+$)|(^0$)/
         if(value==='/'){
           callback()
         } else if (value === '') {
@@ -114,7 +114,7 @@
           taxRevenue:[{validator: checkInput, trigger: ['blur','change']}],
           gdp:[{validator: checkInput, trigger: ['blur','change']}],
         },
-        form: {
+        configForm: {
           grade1: '零售商业',
           grade2: '零售商业',
           rentUnitPrice: 1.9,
@@ -127,7 +127,7 @@
           taxRevenue: 0.08,
           gdp: 0.20,
         },
-        tableData: [
+        configData: [
           {
             grade1: '零售商业',
             grade2: '零售商业',
@@ -340,10 +340,13 @@
       }
     },
     methods: {
+      saveBuildingConfig(){
+      
+      },
       editBuildingConfig(index) {
         console.log(index);
         this.dialogFormVisible = true
-        Object.assign(this.form, this.tableData[index]) // 浅拷贝
+        Object.assign(this.configForm, this.configData[index]) // 浅拷贝
       },
       confirmEdition(index) {
         console.log(index);
