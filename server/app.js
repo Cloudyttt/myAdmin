@@ -16,6 +16,8 @@ let readRouter = require('./routes/read');
 let readRouter_gov = require('./routes/read_gov');
 let usersRouter = require('./routes/users');
 let tableRouter = require('./routes/table');
+let xlsRouter = require('./routes/xls');
+let testRouter = require('./routes/test');
 // 创建项目实例
 let app = express();
 app.use(bodyParser.urlencoded({extended:false}));
@@ -62,7 +64,8 @@ app.use('/read', readRouter);
 app.use('/read_gov', readRouter_gov);
 app.use('/users', usersRouter);
 app.use('/table', tableRouter);
-
+app.use('/xls', xlsRouter);
+app.use('/test', testRouter);
 // 捕获404错误，并转发到错误处理器
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

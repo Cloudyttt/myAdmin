@@ -80,6 +80,7 @@
   // eslint-disable-next-line no-unused-vars
   import {getToken} from '@/utils/auth' // get token from cookie
   import {userQuery} from '@/api/user'
+  import {userRegister} from '@/api/user'
 
   export default {
     data() {
@@ -118,8 +119,6 @@
           username: '',
           pass: '',
           checkPass: '',
-          account: '',
-          date: '',
           root: '管理员',
         },
         rules: {
@@ -168,9 +167,12 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert(this.ruleForm);
+            userRegister({token: this.token, username: this.ruleForm.username,password: this.ruleForm.pass}).then(()=>{
+              this.successMsg('注册成功！')
+              this.dialogFormVisible = false
+            })
           } else {
-            console.log('error submit!!');
+            this.failMsg('请先正确填写账户信息！')
             return false;
           }
         });
@@ -179,17 +181,17 @@
         this.$refs[formName].resetFields();
         this.successMsg('已重置！')
       },
-      successMsg(msg) {
-        this.$message({
-          message: msg,
-          type: 'success'
-        });
-      },
       handleDelete(index) {
         alert('删除' + index)
       },
       handleUpdate(index) {
         alert('修改' + index)
+      },
+      successMsg(msg) {
+        this.$message({
+          message: msg,
+          type: 'success'
+        });
       },
       failMsg(err) {
         this.$message({

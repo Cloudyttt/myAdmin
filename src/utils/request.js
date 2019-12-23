@@ -62,13 +62,33 @@ service.interceptors.response.use(
       if (res.code === 500) {
         // to re-login
         MessageBox.confirm('请重新登陆！', {
-          confirmButtonText: 'Re-Login',
-          cancelButtonText: 'Cancel',
+          confirmButtonText: '重新登录',
+          cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           store.dispatch('user/resetToken').then(() => {
             location.reload()
           })
+        })
+      }
+      if (res.code === 501) {
+        // to re-login
+        MessageBox.confirm('操作失败！', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+
+        })
+      }
+      if (res.code === 502) {
+        // to re-login
+        MessageBox.confirm('用户已存在！', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+
         })
       }
       return Promise.reject(new Error(res.message || 'Error'))

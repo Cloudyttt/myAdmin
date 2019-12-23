@@ -1,5 +1,4 @@
 const express = require('express');
-const router = express.Router();
 const fs = require('fs');
 const multer = require('multer');
 //uuid工具可以生成唯一标示 需要安装
@@ -27,6 +26,7 @@ let imageLimit = {
 //设置过滤规则（可选）
 let imageFilter = function (req, file, cb) {
   let acceptableMime = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+  //微信公众号只接收上述四种类型的图片
   if (acceptableMime.indexOf(file.mimetype) !== -1) {
     cb(null, true)
   } else {
@@ -53,7 +53,7 @@ createFolder(uploadFolder);
 let upload = multer({
   storage: storage,
   /*fileFilter: imageFilter,*/
-  limits: imageLimit
+  /*limits: imageLimit*/
 });
 
 

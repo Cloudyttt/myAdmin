@@ -130,8 +130,6 @@ router.post('/getInfo', function (req, res, next) {
       });
     }
   })
-
-
 });
 
 router.post('/logout', function (req, res, next) {
@@ -143,67 +141,57 @@ router.post('/logout', function (req, res, next) {
   res.send(resData)
 });
 
+router.post('/register', function (req, res, next) {
+  let data = req.body;
+  console.log('|----------------------------- register -----------------------------|');
+  console.log('data', data);
+  let {token, username, password} = data;
+  // JWT验证
+  jwt.verify(token, secretKey, verifyOptions, (err, decode) => {
+    if (err) {
+      console.log('err', err);
+      let resData = {
+        code: 501 // 令牌错误，需要验证用户
+      }
+      res.send(resData)
+    } else {
+      console.log('decode:', decode);
+      let checkSql = `select * from users where username = '${username}'`
+      let checkUsername = query(checkSql);
+      checkUsername.then(result => {
+        if(result.length === 0){
+          let sql = `insert into users (username,password) values ('${username}', '${password}')`;
+          let promise = insert(sql);
+          promise.then(result => {
+            let resData = {
+              code: 200,
+              data: result[0]
+            }
+            console.log('resData', resData);
+            res.send(resData)
+          }).catch(err => {
+            console.log(err)
+            let resData = {
+              code: 404
+            }
+            res.send(resData)
+          })
+        } else {
+          console.log('用户已经存在!');
+          let resData = {
+            code: 502
+          }
+          res.send(resData)
+        }
+      }).catch(err=>{
+        console.log(err);
+        let resData = {
+          code: 404
+        }
+        res.send(resData)
+      })
+    }
+  }) // jwt.verify
+}) // router
 
-/*// 更新数据
-router.get('/update', function (req, res, next) {
-  let data = JSON.parse(req.query.data);
-  console.log(data);
-  let title = data.title;
-  let language = data.lang;
-  let uptime = data.uptime;
-  let likes = parseInt(data.likes);
-  let id = data.articleID;
-
-  // 更新数据库
-  let updateSql = `update articles set title=\'${title}\',lang=\'${language}\',updateTime=\'${uptime}\', likes=${likes} where id=${id}`;
-  console.log('updateSql: ', updateSql);
-
-  let promise = update(updateSql);
-  promise.then(result => {
-    console.log(result);
-    res.send(result)
-  }).catch(err => {
-    console.log(err)
-  });
-});
-
-// 插入数据
-router.get('/insert', function (req, res, next) {
-  let data = JSON.parse(req.query.data);
-  console.log(data);
-  let title = data.title;
-  let language = data.lang;
-  let uptime = data.uptime;
-  let likes = parseInt(data.likes);
-  // 插入数据库
-  let insertSql = `insert into articles (title, lang, uploadTime, updateTime, likes) values (\'${title}\',\'${language}\',\'${uptime}\',\'${uptime}\',${likes})`;
-  console.log('insertSql: ', insertSql);
-
-  let promise = insert(insertSql);
-  promise.then(result => {
-    console.log(result);
-    res.send(result.insertId)
-  }).catch(err => {
-    console.log(err)
-  });
-});
-
-
-router.get('/delete', function (req, res, next) {
-  console.log('删除');
-  let id = JSON.parse(req.query.id);
-  console.log(id);
-  let insertSql = `DELETE FROM articles WHERE id=${id}`;
-  console.log('insertSql: ', insertSql);
-  let promise = _delete(insertSql);
-  promise.then(result => {
-    console.log(result);
-    res.send(result)
-  }).catch(err => {
-    console.log(err)
-  });
-
-})
-;*/
-
-module.exports = router;
+module.exports = router

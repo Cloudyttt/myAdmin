@@ -31,3 +31,12 @@ export function userQuery(data) {
     data
   })
 }
+
+
+export function userRegister(data) {
+  return request({
+    url: 'http://localhost:3000/users/register',
+    method: 'post',
+    data
+  })
+}
