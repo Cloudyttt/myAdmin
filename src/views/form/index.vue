@@ -16,7 +16,7 @@
       <el-form-item label="Mesh JSON">
         <el-input type="textarea" v-model="form.meshJson"/>
       </el-form-item>
-      <el-form-item label="XLS JSON" prop="xlsAddr">
+      <el-form-item label="XLS Addr" prop="xlsJson">
         <!--<el-button type="success" plain @click="routerToBuildingConfig">详细建筑配置</el-button>-->
         <!--<el-upload
             :data="{id:123}"
@@ -44,10 +44,14 @@
             :on-remove="handleRemove"
             :on-success="handleSucceed"
             :on-exceed="fileExceed"
+            :before-upload="handleBeforeUpload"
+            :on-error="handleFail"
             :auto-upload="false"
+            :file-list="fileList"
+            :on-change="handleChange"
             :limit="1">
-          <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-          <div slot="tip" class="el-upload__tip"></div>
+          <el-button slot="trigger" size="small">选取文件</el-button>
+          <div slot="tip" class="el-upload__tip" style="margin-top: -10px;height: 30px">请上传正确的Excel表</div>
         </el-upload>
       </el-form-item>
       <el-form-item>
@@ -68,11 +72,20 @@
   // import request from '@/utils/request'
   export default {
     data() {
+      // eslint-disable-next-line no-unused-vars
+      let valiFile = (rule, value, callback) => {
+        if (value) {
+          callback(new Error('请选择建筑配置文件'));
+        } else {
+          callback();
+        }
+      };
       return {
         buildingConfigVisible: false,
         rules: {
           title: [{required: true, message: '请输入项目名称', trigger: ['blur', 'change']}],
-          xlsAddr:[{required: true, message: '请先添加建筑配置表', trigger: ['blur', 'change']}],
+          /*xlsAddr: [{required: true, message: '请先添加建筑配置表', trigger: ['blur', 'change']}],*/
+          xlsJson: [{validate:valiFile, trigger: ['blur', 'change']}]
         },
         form: {
           id: 0,
@@ -83,10 +96,15 @@
           meshJson: '',
           token: '',
         },
-        loading:false,
+        loading: false,
         fileList: [],
-        
+        haveFile:false,
         data: {id: 123}
+      }
+    },
+    watch:{
+      fileList:function () {
+        console.log('this.fileList', this.fileList);
       }
     },
     computed: {
@@ -166,26 +184,46 @@
           meshJson: '',
         }
       },
-      successMsg() {
+      successMsg(val = '创建成功') {
         this.$message({
-          message: '创建成功',
+          message: val,
           type: 'success'
         });
       },
-      failMsg(err) {
+      failMsg(err = '操作失败') {
         this.$message({
           message: err,
           type: 'warning'
         })
       },
-      
+
       submitUpload() {
-        this.form.token = getToken()
-        this.loading = true
-        this.$refs.upload.submit();
+        this.$refs.form.validate(valid => {
+          this.loading = true
+          if (valid) {
+            /*setTimeout(() => {
+              if (this.loading === true) {
+                this.loading = false
+              }
+            }, 2000)*/
+            if(this.haveFile){
+              this.form.token = getToken()
+              /*this.successMsg()*/
+              this.$refs.upload.submit();
+            } else {
+              this.failMsg('请先上传建筑配置表单！')
+              this.loading = false
+              return false
+            }
+          } else {
+            this.failMsg('请先正确填写表单！')
+            this.loading = false
+            return false
+          }
+        });
       },
       // eslint-disable-next-line no-unused-vars
-      handleSucceed(response, file, fileList){
+      handleSucceed(response, file, fileList) {
         console.log('response', response);
         this.list = response.data;
         this.loading = false
@@ -197,7 +235,21 @@
       },
       handlePreview(file) {
         console.log(file);
-      }
+      },
+      handleFail() {
+        this.loading = false
+        this.failMsg('上传失败')
+      },
+      handleBeforeUpload(file) {
+        console.log('file in before upload',file);
+      },
+      handleChange(file, fileList){
+        console.log('file in change',file);
+        console.log('fileList in change', fileList);
+        if(file){
+          this.haveFile = true
+        }
+      },
     }
   }
 </script>

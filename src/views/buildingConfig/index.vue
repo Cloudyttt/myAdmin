@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <h3>当前项目：{{form.title}}</h3>
     <el-table
         border
         stripe
@@ -101,6 +102,7 @@
         }
       };
       return {
+        projectName:'123',
         form: {},
         a: '1',
         dialogFormVisible: false,
@@ -349,7 +351,7 @@
       },
       saveBuildingConfig() {
         // TODO:向服务器发送创建/修改请求
-        alert('保存')
+        this.$router.push({name:this.backTo})
       },
       editBuildingConfig(index) {
         console.log(index);

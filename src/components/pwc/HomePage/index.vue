@@ -238,6 +238,7 @@
     name: 'HomePage',
     data() {
       return {
+        buidlingConfigData:{},
         pwcData: '',
         activeTab: 'tab-1',
         thermodynamic: false, //热力图
@@ -301,13 +302,15 @@
           this.isVisibal = false;
         }
       })
+      //TODO:请求服务器获取当前盗墓对应的Excel表数据
 
     },
     created() {
       this.pwcData = this.$route.params
-      console.log('this.pwcData', this.pwcData)
+      console.log('传过来的数据this.pwcData', this.pwcData)
     },
-    watch: {},
+    beforeMount() {
+    },
     methods: {
       //输入框
       openModifyInput(val) {
@@ -503,9 +506,6 @@
         this.thermodynamic = false;
         console.log('tagChangeHandler' + '-' + this.activeTab);
         this.activeActivity = key;
-      },
-      asd() {
-        alert('123')
       },
     }
   }

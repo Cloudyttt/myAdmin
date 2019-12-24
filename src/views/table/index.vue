@@ -10,7 +10,7 @@
         style="width: 100%;">
       <el-table-column label="编号" prop="id" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.$index+1 }}</span>
+          <span>{{ getCardOrder(scope.$index)+ 1 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="项目名称" min-width="150px">
@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column label="数据来源" class-name="status-col" align="center">
         <template slot-scope="{row}">
-          {{ row.xlsAddr }}
+          {{ row.xlsJson }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="150px">
@@ -267,7 +267,45 @@
         let dateTime = year + "-" + month + "-" + day;
         return dateTime;
       },
-      handleDelete(index, row) {
+      getCardOrder(index){
+        return (this.listQuery.page - 1) * this.listQuery.limit + index
+      },
+      // 删除前弹窗警告
+      openWarning(index) {
+        this.$confirm('此操作将永久删除该项目, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.handleDelete(index)
+          /*this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });*/
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      // 真正开始删除
+      handleDelete(index) {
+        let finalIndex = this.getCardOrder(index)
+        console.log('finalIndex, this.list[finalIndex]', finalIndex, this.list[finalIndex]);
+        this.listLoading = false
+        deleteProject({token: this.token, id: this.list[finalIndex].id}).then(response => {
+          console.log('response', response);
+          if(response.code === 200){
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }
+          this.fetchData()
+        })
+      },
+      /*handleDelete(index, row) {
         console.log(index, row);
         this.listLoading = true
         deleteProject({token: this.token, id: this.list[index].id}).then(response => {
@@ -275,7 +313,7 @@
           this.fetchData()
           this.successMsg()
         })
-      },
+      },*/
       successMsg() {
         this.$message({
           message: '成功!',

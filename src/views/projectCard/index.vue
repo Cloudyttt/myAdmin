@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <div style="overflow: hidden;display: flex; flex-wrap: wrap;justify-content:space-around">
+    <div style="overflow: hidden;display: flex; flex-wrap: wrap;justify-content:flex-start">
       <el-card
           v-for="(item, index) in queryData"
           :key="item.id"
@@ -8,7 +8,7 @@
           style="width: 400px; height: 240px; margin: 10px;"
           shadow="hover">
         <div slot="header" class="clearfix" style="padding: 0!important;">
-          <span><strong>{{index + 1}}. {{item.title}}</strong></span>
+          <span><strong>{{getCardOrder(index) + 1}}. {{item.title}}</strong></span>
           <el-button size="mini" type="danger" @click="openWarning(index)"
                      style="float: right; padding: 3px 5px; margin-left: 10px">
             删除
@@ -35,7 +35,7 @@
             <el-col :span="6" style="border-right: 1px solid lightgray">
               <el-tag size="mini">数据来源</el-tag>
             </el-col>
-            <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.xlsAddr}}</el-col>
+            <el-col :span="16" :offset="2" style="font-size: 0.9rem; color: #5a5e66">{{item.xlsJson}}</el-col>
           </el-row>
           <el-row :gutter="20" style="padding: 8px 0">
             <el-col :span="6" style="border-right: 1px solid lightgray">
@@ -121,7 +121,7 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          limit: 9,
+          limit: 10,
         },
         form: {
           id: 0,
@@ -150,12 +150,15 @@
       },
       queryData: function () {
         return this.list.slice((this.listQuery.page - 1) * this.listQuery.limit, this.listQuery.page * this.listQuery.limit)
-      }
+      },
     },
     created() {
       this.fetchData()
     },
     methods: {
+      getCardOrder(index){
+        return (this.listQuery.page - 1) * this.listQuery.limit + index
+      },
       routerToBuildingConfig() {
         this.$refs.dataForm.validate(valid => {
           if (valid) {
@@ -171,6 +174,7 @@
       showPWC(index) {
         this.$router.push({name: 'Homepage', params: this.list[index]})
       },
+      // 删除前弹窗警告
       openWarning(index) {
         this.$confirm('此操作将永久删除该项目, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -178,16 +182,32 @@
           type: 'warning'
         }).then(() => {
           this.handleDelete(index)
-          this.$message({
+          /*this.$message({
             type: 'success',
             message: '删除成功!'
-          });
+          });*/
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '已取消删除'
           });
         });
+      },
+      // 真正开始删除
+      handleDelete(index) {
+        let finalIndex = this.getCardOrder(index)
+        console.log('finalIndex, this.list[finalIndex]', finalIndex, this.list[finalIndex]);
+        this.listLoading = true
+        deleteProject({token: this.token, id: this.list[finalIndex].id}).then(response => {
+          console.log('response', response);
+          if(response.code === 200){
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }
+          this.fetchData()
+        })
       },
       fetchData() {
         this.listLoading = true
@@ -266,14 +286,6 @@
           }
         });
         
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
-        this.listLoading = true
-        deleteProject({token: this.token, id: this.list[index].id}).then(response => {
-          console.log('response', response);
-          this.fetchData()
-        })
       },
       successMsg() {
         this.$message({

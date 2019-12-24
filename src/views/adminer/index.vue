@@ -61,7 +61,7 @@
           <span>{{ parseTime(new Date(scope.row.lastestLogin))}}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="150px">
+      <!--<el-table-column label="操作" align="center" class-name="small-padding fixed-width" min-width="150px">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate($index)">
             修改
@@ -70,7 +70,7 @@
             删除
           </el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
   
   </div>
